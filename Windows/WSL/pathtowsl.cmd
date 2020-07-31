@@ -2,12 +2,13 @@
 @ SETLOCAL ENABLEDELAYEDEXPANSION
 @ SET ARGS=
 @ FOR %%A IN (%*) DO @ (
-    @ SET ARG=%%A
-    @ ECHO !ARG! | @ FINDSTR "\\" > NUL
+    @ SET ARG=%%~A
+    @ ECHO !ARG! | @ FINDSTR "\\" 1>NUL
     @ IF "!ERRORLEVEL!"=="0" @ (
         @ SET ARG=!ARG:\=\\!
+        @ SET ARG=!ARG:`=\`!
         @ FOR /F "delims=" %%P IN (
-            '@ wsl.exe -- wslpath -- !ARG!'
+            '@ wsl.exe -- wslpath -- "!ARG!"'
         ) DO @ SET ARG="%%P"
     )
     @ IF "!ARGS!"=="" @ (
