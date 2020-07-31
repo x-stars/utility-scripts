@@ -2,8 +2,8 @@
 
 @ REM Initialize %Path% variable.
 @ SET SysEnvKey=HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Environment
-@ FOR /F "tokens=1,2*" %%I IN (
-    '@ REG QUERY "%SysEnvKey%" /V "Path" ^| @ FINDSTR "Path"') DO @ SET SysPath=%%K
+@ FOR /F "tokens=1,2,*" %%A IN (
+    '@ REG QUERY "%SysEnvKey%" /V "Path" ^| @ FINDSTR "Path"') DO @ SET SysPath=%%C
 @ IF "%SysPath:~-1%"==";" @ SET SysPath=%SysPath:~0,-1%
 
 @ REM Download 7-Zip CLI for Windows x64.
@@ -14,7 +14,7 @@
 @ REM Get version info of .NET Core SDK.
 @ SET NETVer=%1
 @ SET NETVerLink=https://dotnetcli.azureedge.net/dotnet/Sdk/LTS/latest.version
-@ IF "%NETVer%"=="" @ FOR /F "skip=1" %%I IN ('@ curl -L "%NETVerLink%"') DO @ SET NETVer=%%I
+@ IF "%NETVer%"=="" @ FOR /F "skip=1" %%A IN ('@ curl -L "%NETVerLink%"') DO @ SET NETVer=%%A
 
 @ REM Download and install .NET Core SDK for Windows x64.
 @ SET NETName=dotnet-sdk-%NETVer%-win-x64.zip

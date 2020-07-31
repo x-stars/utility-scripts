@@ -2,8 +2,8 @@
 
 @ REM Initialize %Path% variable.
 @ SET SysEnvKey=HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Environment
-@ FOR /F "tokens=1,2*" %%I IN (
-    '@ REG QUERY "%SysEnvKey%" /V "Path" ^| @ FINDSTR "Path"') DO @ SET SysPath=%%K
+@ FOR /F "tokens=1,2,*" %%A IN (
+    '@ REG QUERY "%SysEnvKey%" /V "Path" ^| @ FINDSTR "Path"') DO @ SET SysPath=%%C
 @ IF "%SysPath:~-1%"==";" @ SET SysPath=%SysPath:~0,-1%
 
 @ REM Download 7-Zip CLI for Windows x64.
@@ -14,8 +14,8 @@
 @ REM Get version info of PowerShell Core.
 @ SET PSVer=%1
 @ SET PSVerLink=https://raw.githubusercontent.com/PowerShell/PowerShell/master/tools/metadata.json
-@ IF "%PSVer%"=="" @ FOR /F "tokens=2 delims=:, " %%I IN (
-    '@ curl -L "%PSVerLink%" ^| @ FINDSTR "StableReleaseTag"') DO @ SET PSVer=%%~I
+@ IF "%PSVer%"=="" @ FOR /F "tokens=2 delims=:, " %%A IN (
+    '@ curl -L "%PSVerLink%" ^| @ FINDSTR "StableReleaseTag"') DO @ SET PSVer=%%~A
 @ IF NOT "%PSVer%"=="" @ SET PSVer=%PSVer:v=%
 
 @ REM Download and install PowerShell Core for Windows x64.
