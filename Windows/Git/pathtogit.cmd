@@ -1,19 +1,20 @@
 @ REM Convert Windows paths in arguments to Git Bash paths.
 @ SETLOCAL ENABLEDELAYEDEXPANSION
 @ SET ARGS=
-@ FOR %%A IN (%*) DO @ (
-    @ SET ARG=%%A
+: LOOP ARGS
+    @ IF '%1'=='' @ GOTO ENDLOOP ARGS
+    @ SET ARG=%1
     @ ECHO !ARG! | @ FINDSTR /V "[\\][\\]" | @ FINDSTR "[\\]" > NUL
-    @ IF "!ERRORLEVEL!"=="0" @ (
-        @ SET ARG=%%~A
+    @ IF !ERRORLEVEL!==0 @ (
+        @ SET ARG=%~1
         @ ECHO !ARG! | @ FINDSTR "^[\\]" > NUL
-        @ IF "!ERRORLEVEL!"=="0" @ (
+        @ IF !ERRORLEVEL!==0 @ (
             @ FOR /F "delims=" %%P IN (
                 '@ ECHO %CD%'
             ) DO @ SET ARG=%%~dP!ARG!
         )
         @ ECHO !ARG! | @ FINDSTR "^[a-zA-Z]:" > NUL
-        @ IF "!ERRORLEVEL!"=="0" @ (
+        @ IF !ERRORLEVEL!==0 @ (
             @ SET DRV=!ARG:~0,1!
             @ FOR %%C IN (
                 a b c d e f g h i j k l m
@@ -25,10 +26,12 @@
         @ SET ARG=!ARG:`=\`!
         @ SET ARG="!ARG!"
     )
-    @ IF "!ARGS!"=="" @ (
+    @ IF '!ARGS!'=='' @ (
         @ SET ARGS=!ARG!
     ) ELSE @ (
         @ SET ARGS=!ARGS! !ARG!
     )
-)
-@ IF NOT "!ARGS!"=="" @ ECHO !ARGS!
+    @ SHIFT
+    @ GOTO LOOP ARGS
+: ENDLOOP ARGS
+@ IF NOT '!ARGS!'=='' @ ECHO !ARGS!
