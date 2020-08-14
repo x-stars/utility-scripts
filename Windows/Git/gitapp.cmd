@@ -6,7 +6,7 @@
 @ FOR /F "delims=" %%A IN (
     '@ pathtogit.cmd %*'
 ) DO @ SET ARGS=%%A
-@ IF '%ARGS%'=='' @ (
+@ IF NOT DEFINED ARGS @ (
     @ "%BASH%" -c "%PROG%"
 ) ELSE @ (
     @ "%BASH%" -c "%PROG% %ARGS:"=\"%"

@@ -1,5 +1,6 @@
 @ REM Copy public key of local host to remote host.
-@ IF "%*"=="" @ (
+@ SET ARGS=%*
+@ IF NOT DEFINED ARGS @ (
     @ ECHO usage: %~n0 [-i identity_file] [user@]hostname 1>&2
     @ EXIT /B 1
 )

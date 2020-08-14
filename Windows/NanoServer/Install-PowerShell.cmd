@@ -14,9 +14,9 @@
 @ REM Get version info of PowerShell Core.
 @ SET PSVer=%1
 @ SET PSVerLink=https://raw.githubusercontent.com/PowerShell/PowerShell/master/tools/metadata.json
-@ IF "%PSVer%"=="" @ FOR /F "tokens=2 delims=:, " %%A IN (
+@ IF NOT DEFINED PSVer @ FOR /F "tokens=2 delims=:, " %%A IN (
     '@ curl -L "%PSVerLink%" ^| @ FINDSTR "StableReleaseTag"') DO @ SET PSVer=%%~A
-@ IF NOT "%PSVer%"=="" @ SET PSVer=%PSVer:v=%
+@ IF DEFINED PSVer @ SET PSVer=%PSVer:v=%
 
 @ REM Download and install PowerShell Core for Windows x64.
 @ SET PSName=PowerShell-%PSVer%-win-x64.zip
