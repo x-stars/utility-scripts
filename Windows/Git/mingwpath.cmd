@@ -1,4 +1,4 @@
-@ REM Convert Windows paths in arguments to Git Bash paths.
+@ REM Convert Windows paths in arguments to MinGW paths.
 @ SETLOCAL ENABLEDELAYEDEXPANSION
 @ SET ARGS=
 : LOOP_ARGS
