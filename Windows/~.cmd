@@ -1,1 +1,0 @@
-@ CHDIR /D "%USERPROFILE%"
