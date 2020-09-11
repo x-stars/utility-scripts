@@ -1,7 +1,7 @@
 @ REM Run Maven command with local settings.
 @ SETLOCAL ENABLEDELAYEDEXPANSION
 @ SET WORK_DIR=%CD%
-@ SET LOCAL_NAME=maven-settings.xml
+@ SET LOCAL_NAME=settings.xml
 : LOOP_FINDLOCAL
 @ CHDIR ..
 @ SET LOCAL_DIR=!CD!
