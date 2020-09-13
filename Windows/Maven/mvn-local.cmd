@@ -4,18 +4,16 @@
 @ SET LOCAL_NAME=settings.xml
 : LOOP_FINDLOCAL
 @ CHDIR ..
-@ SET LOCAL_DIR=!CD!
-@ SET LOCAL_FILE=!LOCAL_DIR!\!LOCAL_NAME!
+@ SET LOCAL_FILE=!CD!\!LOCAL_NAME!
 @ IF NOT EXIST "!LOCAL_FILE!" @ (
-    @ IF NOT "!LOCAL_DIR:~-1!"=="\" @ (
+    @ IF NOT "!CD:~-1!"=="\" @ (
         @ GOTO LOOP_FINDLOCAL
     )
 )
 : ENDLOOP_FINDLOCAL
 @ CHDIR %WORK_DIR%
-@ SET ARGS=%*
 @ IF EXIST "%LOCAL_FILE%" @ (
-    mvn --settings "%LOCAL_FILE%" %*
+    mvn -s "%LOCAL_FILE%" %*
 ) ELSE @ (
     mvn %*
 )
