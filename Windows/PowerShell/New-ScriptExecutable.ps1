@@ -8,7 +8,7 @@
 在调用引用文件时，应使用 $(Join-Path $PSScriptRoot '(ReferenceName)') 命令来获取引用文件的路径。
 
 .PARAMETER Path
-创建可执行文件的路径。可带上参数名从管道接收值。
+可执行文件的路径。可带上参数名从管道接收值。
 默认为当前目录下与脚本文件同名的 *.exe 文件。
 
 .PARAMETER Script
@@ -24,10 +24,12 @@
 指定创建的可执行文件在运行时不显示 PowerShell 窗口。
 
 .INPUTS
-从管道接收的脚本文件或模块文件夹的路径。
+System.String[]
+脚本文件的路径。
 
 .OUTPUTS
-创建的能运行输入的 PowerShell 脚本的可执行文件。
+System.IO.FileInfo[]
+创建的可执行文件。
 
 .NOTES
 作者：天南十字星 https://github.com/x-stars

@@ -11,9 +11,14 @@ Invoke-WebRequest 命令下载文件的简化实现，不能执行其他 Web 命
 
 .PARAMETER OutFile
 要保存到文件的路径。可带上参数名从管道接收值。
-默认为当前目录下与 Uri 内容同名的文件。
+默认为当前目录下与 URI 内容同名的文件。
+
+.INPUTS
+System.Uri[]
+要获取的网络内容的 URI。
 
 .OUTPUTS
+System.IO.FileInfo[]
 从网络获取到的内容保存的文件。
 
 .NOTES
