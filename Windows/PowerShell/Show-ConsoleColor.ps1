@@ -3,12 +3,6 @@
 显示控制台颜色设置。
 #>
 
-[CmdletBinding()]
-[OutputType([void])]
-param
-(
-)
-
 $DarkColors = @(
     "Black", "DarkBlue", "DarkGreen", "DarkCyan",
     "DarkRed", "DarkMagenta", "DarkYellow", "Gray")
