@@ -1,4 +1,4 @@
-@ REM Run the Git Bash app with the same name.
+@ REM Run Git Bash app with the same name.
 @ FOR %%N IN (git.exe
 ) DO @ SET GIT_HOME=%%~dp$PATH:N..
 @ SET BASH=%GIT_HOME%\bin\bash.exe
