@@ -15,7 +15,7 @@ function prompt
     Write-Host '@' -NoNewline
     Write-Host $env:COMPUTERNAME -ForegroundColor Magenta -NoNewline
     Write-Host ' ' -NoNewline
-    Write-Host $PWD -ForegroundColor Yellow -NoNewline
+    Write-Host $PWD.Path -ForegroundColor Yellow -NoNewline
     Write-Host
     Write-Output '> '
 }

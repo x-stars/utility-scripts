@@ -26,11 +26,12 @@ function Update-Profile
 # 导入脚本文件目录。
 $env:Path = "$env:Path$PathSep$(Join-Path $(Split-Path $PROFILE -Parent) 'Scripts')"
 # 导入当前用户模块。
-Get-ChildItem $(Join-Path $(Split-Path $PROFILE -Parent) Modules) -Directory | Import-Module
+Import-Module $(Get-ChildItem $(Join-Path $(Split-Path $PROFILE -Parent) 'Modules'))
 
 # 加载命令提示配置。
 $PromptProfile = $(Join-Path $(Split-Path $PROFILE -Parent) 'prompt.ps1')
 if (Test-Path $PromptProfile -PathType Leaf) { . $PromptProfile }
 
 # 导入当前目录的配置文件。
-if (Test-Path '.profile.ps1' -PathType Leaf) { . '.profile.ps1' }
+$LocalProfile = ".$(Split-Path $PSCommandPath -Leaf)"
+if (Test-Path $LocalProfile -PathType Leaf) { . $LocalProfile }
