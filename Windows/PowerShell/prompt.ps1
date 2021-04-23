@@ -3,7 +3,7 @@
 当前用户的 PowerShell 命令提示配置。
 #>
 
-function prompt
+function Prompt
 {
     $State = $?
     $StateText = if ($State) { '(○)' } else { '(×)' }
