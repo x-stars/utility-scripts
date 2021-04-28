@@ -17,7 +17,7 @@ Set-Alias out Out-File -Force
 function Update-Profile
 {
     $PROFILE.PSObject.Properties |
-    Where-Object Name -NE 'Length' |
+    Where-Object { $_.Name -ne 'Length' } |
     ForEach-Object { $_.Value } |
     Where-Object { Test-Path $_ -PathType Leaf } |
     ForEach-Object { . $_ }
