@@ -1,0 +1,18 @@
+#!/bin/sh
+
+if [ -z "$1" ]
+then
+    NAME="."
+else
+    NAME="$1"
+fi
+
+if [ -d "$NAME" ]
+then
+    cd "$NAME" && pwd
+else
+    DIR=`dirname "$NAME"`
+    DIR=`cd "$DIR" && pwd`
+    FILE=`basename "$NAME"`
+    echo "$DIR/$FILE"
+fi
