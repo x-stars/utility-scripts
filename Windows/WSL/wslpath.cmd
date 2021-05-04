@@ -1,5 +1,6 @@
 @ REM Convert Windows paths in arguments to WSL paths.
 @ SETLOCAL ENABLEDELAYEDEXPANSION
+@ SET CD=
 @ SET ARGS=
 : LOOP_ARGS
 @ SET ARG=%1
@@ -35,3 +36,4 @@
 @ GOTO LOOP_ARGS
 : ENDLOOP_ARGS
 @ IF DEFINED ARGS @ ECHO:!ARGS!
+@ ENDLOCAL
