@@ -13,19 +13,25 @@ Set-Alias eval Invoke-Expression -Force
 Set-Alias new New-Object -Force
 Set-Alias out Out-File -Force
 
-# 定义重新加载配置文件的命令。
-function Update-Profile
+# 定义命令提示的配置。
+function prompt
 {
-    $PROFILE.PSObject.Properties |
-    Where-Object { $_.Name -ne 'Length' } |
-    ForEach-Object { $_.Value } |
-    Where-Object { Test-Path $_ -PathType Leaf } |
-    ForEach-Object { . $_ }
+    $Status = $?
+    $StatusText = if ($Status) { '(○)' } else { '(×)' }
+    $StatusColor = if ($Status) { 'Green' } else { 'Red' }
+    [System.Console]::ResetColor()
+    Write-Host $StatusText -ForegroundColor $StatusColor -NoNewline
+    Write-Host "[$($(Get-Date).ToString('HH:mm'))]" -NoNewline
+    Write-Host ' ' -NoNewline
+    Write-Host $env:USERNAME -ForegroundColor Cyan -NoNewline
+    Write-Host '@' -NoNewline
+    Write-Host $env:COMPUTERNAME -ForegroundColor Magenta -NoNewline
+    Write-Host ' ' -NoNewline
+    Write-Host $PWD.Path -ForegroundColor Yellow -NoNewline
+    Write-Host
+    [System.Console]::ResetColor()
+    Write-Output '> '
 }
-
-# 加载命令提示配置。
-$PromptProfile = $(Join-Path $(Split-Path $PROFILE -Parent) 'prompt.ps1')
-if (Test-Path $PromptProfile -PathType Leaf) { . $PromptProfile }
 
 # 导入脚本文件目录。
 $env:Path = "$env:Path$PathSep$(Join-Path $(Split-Path $PROFILE -Parent) 'Scripts')"
