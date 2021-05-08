@@ -47,12 +47,12 @@ esac
 
 if [ -n "$force_color_prompt" ]; then
     if [ -x /usr/bin/tput ] && tput setaf 1 >&/dev/null; then
-	# We have color support; assume it's compliant with Ecma-48
-	# (ISO/IEC-6429). (Lack of such support is extremely rare, and such
-	# a case would tend to support setf rather than setaf.)
-	color_prompt=yes
+        # We have color support; assume it's compliant with Ecma-48
+        # (ISO/IEC-6429). (Lack of such support is extremely rare, and such
+        # a case would tend to support setf rather than setaf.)
+        color_prompt=yes
     else
-	color_prompt=
+        color_prompt=
     fi
 fi
 
@@ -60,21 +60,17 @@ D="\[\e[00m\]"; B="\[\e[01m\]"
 k="\[\e[90m\]"; r="\[\e[91m\]"; g="\[\e[92m\]"; y="\[\e[93m\]"
 b="\[\e[94m\]"; m="\[\e[95m\]"; c="\[\e[96m\]"; w="\[\e[97m\]"
 
-chroot_prompt='${debian_chroot:+($debian_chroot)}'
+chroot_prompt="${debian_chroot:+($debian_chroot)}"
 if [ "$color_prompt" = yes ]; then
-    _status () {
-        [ $? = 0 ] &&
-            echo -ne "\e[92m(\u25cb)\e[0m" ||
-            echo -ne "\e[91m(\u00d7)\e[0m"
-    }
+    _status () { [ $? = 0 ] &&
+        echo -ne "\e[92m(\u25cb)\e[0m" ||
+        echo -ne "\e[91m(\u00d7)\e[0m"; }
     PS1="$D"'`_status`'"$D[\A] $chroot_prompt$c\u$D@$m\h $b$B\w$D\n$B\$$D "
 else
-    _status () {
-        [ $? = 0 ] &&
-            echo -ne "(\u25cb)" ||
-	    echo -ne "(\u00d7)"
-    }
-    PS1="$D"'`_status`'"$D[\A] $chroot_prompt\u@\h \w\n\$ "
+    _status () { [ $? = 0 ] &&
+        echo -ne "(\u25cb)" ||
+        echo -ne "(\u00d7)"; }
+    PS1='`_status`'"$D[\A] $chroot_prompt\u@\h \w\n\$ "
 fi
 
 unset D B k r g y b m c w
@@ -90,7 +86,7 @@ xterm*|rxvt*)
 esac
 
 # add user binaries and scripts to PATH
-if [ `expr "$PATH" : '.*~/bin.*'` -eq 0 ]; then
+if [ `expr "$PATH" : '.*~/bin.*'` = 0 ]; then
     export PATH="$PATH:~/bin"
 fi
 
