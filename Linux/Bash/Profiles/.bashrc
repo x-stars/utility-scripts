@@ -56,24 +56,20 @@ if [ -n "$force_color_prompt" ]; then
     fi
 fi
 
-D="\[\e[00m\]"; B="\[\e[01m\]"
-k="\[\e[90m\]"; r="\[\e[91m\]"; g="\[\e[92m\]"; y="\[\e[93m\]"
-b="\[\e[94m\]"; m="\[\e[95m\]"; c="\[\e[96m\]"; w="\[\e[97m\]"
-
 chroot_prompt="${debian_chroot:+($debian_chroot)}"
 if [ "$color_prompt" = yes ]; then
     _status () { [ $? = 0 ] &&
         echo -ne "\e[92m(\u25cb)\e[0m" ||
         echo -ne "\e[91m(\u00d7)\e[0m"; }
-    PS1="$D"'`_status`'"$D[\A] $chroot_prompt$c\u$D@$m\h $b$B\w$D\n$B\$$D "
+    PS1="\[\e[00m\]"'`_status`'"\[\e[00m\][\A] "
+    PS1="$PS1$chroot_prompt\[\e[96m\]\u\[\e[00m\]@\[\e[95m\]\h "
+    PS1="$PS1\[\e[01;34m\]\w\[\e[00m\]\n\[\e[01m\]\$\[\e[00m\] "
 else
     _status () { [ $? = 0 ] &&
-        echo -ne "(\u25cb)" ||
-        echo -ne "(\u00d7)"; }
-    PS1='`_status`'"$D[\A] $chroot_prompt\u@\h \w\n\$ "
+        echo -ne "(\u25cb)" || echo -ne "(\u00d7)"; }
+    PS1='`_status`'"[\A] $chroot_prompt\u@\h \w\n\$ "
 fi
 
-unset D B k r g y b m c w
 unset color_prompt force_color_prompt chroot_prompt
 
 # If this is an xterm set the title to user@host:dir
