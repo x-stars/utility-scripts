@@ -81,9 +81,14 @@ xterm*|rxvt*)
     ;;
 esac
 
-# add user binaries and scripts to PATH
-if [ `expr "$PATH" : '.*~/bin.*'` = 0 ]; then
-    export PATH="$PATH:~/bin"
+# set PATH so it includes user's private bin if it exists
+if [ -d "$HOME/bin" ] ; then
+    PATH="$HOME/bin:$PATH"
+fi
+
+# set PATH so it includes user's private bin if it exists
+if [ -d "$HOME/.local/bin" ] ; then
+    PATH="$HOME/.local/bin:$PATH"
 fi
 
 # enable color support of ls and also add handy aliases
