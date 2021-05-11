@@ -10,7 +10,7 @@
 @ SET Z7Link=https://raw.githubusercontent.com/develar/7zip-bin/master/win/x64/7za.exe
 @ SET Z7File=%TEMP%\7za.exe
 @ curl -L "%Z7Link%" -o "%Z7File%"
-@ SET Z7Path=^%ProgramFiles^%\7-Zip
+@ SET Z7Path=%ProgramFiles%\7-Zip
 @ MKDIR "%Z7Path%"
 @ COPY "%Z7File%" "%Z7Path%"
 @ SET SysPath=%SysPath%;%Z7Path%
