@@ -2,7 +2,7 @@
 
 ## CMD
 
-``` Bat
+``` Batch
 REM Script file:
 %~f0
 REM Script directory:
@@ -25,7 +25,7 @@ $(Split-Path $PSCommandPath -Leaf)
 
 ## Unix Shell
 
-``` Bash
+``` Shell
 # Script file:
 $(cd $(dirname $0) ; pwd)/$(basename $0)
 # Script directory:
