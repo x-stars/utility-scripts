@@ -21,7 +21,7 @@ function prompt
     $StatusColor = if ($Status) { 'Green' } else { 'Red' }
     [System.Console]::ResetColor()
     Write-Host $StatusText -ForegroundColor $StatusColor -NoNewline
-    Write-Host "[$($(Get-Date).ToString('HH:mm'))]" -NoNewline
+    Write-Host "[$(Get-Date -UFormat %R)]" -NoNewline
     Write-Host ' ' -NoNewline
     Write-Host $env:USERNAME -ForegroundColor Cyan -NoNewline
     Write-Host '@' -NoNewline
@@ -34,6 +34,7 @@ function prompt
 }
 
 # 导入脚本文件目录。
-$env:Path = "$env:Path$PathSep$(Join-Path $(Split-Path $PROFILE -Parent) 'Scripts')"
+$env:Path += $PathSep + $(Join-Path $(Split-Path $PROFILE -Parent) 'Scripts')
 # 导入当前用户模块。
-Import-Module $(Get-ChildItem $(Join-Path $(Split-Path $PROFILE -Parent) 'Modules'))
+Get-ChildItem $(Join-Path $(Split-Path $PROFILE -Parent) 'Modules') -Directory |
+ForEach-Object Name | Import-Module -ErrorAction SilentlyContinue
