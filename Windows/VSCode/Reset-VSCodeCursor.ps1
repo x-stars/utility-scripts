@@ -3,6 +3,14 @@
 恢复 Visual Studio Code 的原始指针样式，保持资源文件的完整性。
 #>
 
+[CmdletBinding()]
+[OutputType([void])]
+[System.Diagnostics.CodeAnalysis.SuppressMessage(
+    'PSUseApprovedVerbs', '', Scope='Function', Target='Combine-Path')]
+param
+(
+)
+
 # 定义支持多个参数的路径拼接方法。
 function Combine-Path { [System.IO.Path]::Combine([string[]]$args) }
 
@@ -21,6 +29,17 @@ if (Test-Path $MainCssBackupPath)
 {
     Remove-Item $MainCssPath
     Move-Item $MainCssBackupPath $MainCssPath
+}
+
+# 初始化主要工作台的 JS 文件的路径。
+$MainJsName = Combine-Path workbench workbench.desktop.main.js
+$MainJsPath = Combine-Path $VSCodeHome $VSAppResDir $MainJsName
+$MainJsBackupPath = "$MainJsPath.org"
+# 恢复主要工作台的 JS 文件。
+if (Test-Path $MainJsBackupPath)
+{
+    Remove-Item $MainJsPath
+    Move-Item $MainJsBackupPath $MainJsPath
 }
 
 # 初始化报告问题窗口的 CSS 文件的路径。

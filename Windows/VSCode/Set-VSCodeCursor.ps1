@@ -3,6 +3,14 @@
 设置 Visual Studio Code 的指针样式，使其符合原生应用的样式。
 #>
 
+[CmdletBinding()]
+[OutputType([void])]
+[System.Diagnostics.CodeAnalysis.SuppressMessage(
+    'PSUseApprovedVerbs', '', Scope='Function', Target='Combine-Path')]
+param
+(
+)
+
 # 定义支持多个参数的路径拼接方法。
 function Combine-Path { [System.IO.Path]::Combine([string[]]$args) }
 
@@ -12,7 +20,7 @@ $VSCodeHome = $(Get-Item $(Join-Path $CodeBinPath ..)).FullName
 $VSAppResDir = Combine-Path resources app out vs
 $SandBoxResDir = Combine-Path code electron-sandbox
 # 定义相关文件的输出编码。
-$Encoding = [System.Text.Encoding]::ASCII
+$Encoding = [System.Text.UTF8Encoding]::new($false)
 
 # 初始化主要工作台的 CSS 文件的路径。
 $MainCssName = Combine-Path workbench workbench.desktop.main.css
@@ -44,6 +52,21 @@ if (-not $(Test-Path $MainCssBackupPath))
     Move-Item $MainCssPath $MainCssBackupPath
 }
 [System.IO.File]::WriteAllText($MainCssPath, $MainCssText, $Encoding)
+
+# 初始化主要工作台的 JS 文件的路径。
+$MainJsName = Combine-Path workbench workbench.desktop.main.js
+$MainJsPath = Combine-Path $VSCodeHome $VSAppResDir $MainJsName
+$MainJsBackupPath = "$MainJsPath.org"
+# 修改并输出主要工作台的 JS 文件。
+$MainJsText = [System.IO.File]::ReadAllText($MainJsPath)
+$MainJsText = $MainJsText.Replace(
+    ".action-menu-item {`n`tflex: 1 1 auto;",
+    ".action-menu-item {`n`tcursor:default;`n`tflex: 1 1 auto;")
+if (-not $(Test-Path $MainJsBackupPath))
+{
+    Move-Item $MainJsPath $MainJsBackupPath
+}
+[System.IO.File]::WriteAllText($MainJsPath, $MainJsText, $Encoding)
 
 # 初始化报告问题窗口的 CSS 文件的路径。
 $ReportCssName = Combine-Path $SandBoxResDir issue issueReporterMain.css
