@@ -57,6 +57,7 @@ using namespace System.Management.Automation
 using namespace Microsoft.CSharp
 
 [CmdletBinding()]
+[Alias('nse')]
 [OutputType([FileInfo[]])]
 param
 (

@@ -32,6 +32,7 @@ Invoke-WebRequest
 #>
 
 [CmdletBinding()]
+[Alias('gwi')]
 [OutputType([System.IO.FileInfo[]])]
 param
 (
