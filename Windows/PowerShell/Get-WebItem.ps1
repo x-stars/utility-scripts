@@ -31,12 +31,8 @@ Get-WebItem.ps1 "http://example.link/README.txt"
 Invoke-WebRequest
 #>
 
-using namespace System
-using namespace System.IO
-using namespace System.Management.Automation
-
 [CmdletBinding()]
-[OutputType([FileInfo[]])]
+[OutputType([System.IO.FileInfo[]])]
 param
 (
     [Parameter(
