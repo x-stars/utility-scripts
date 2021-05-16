@@ -5,21 +5,21 @@
 
 Get-ChildItem $PSScriptRoot '*.ps1' -File | ForEach-Object `
 {
-    $Content = Get-Content $_.FullName
+    $FunctionName = $_.BaseName
     $NewLine = [System.Environment]::NewLine
-    $RawContent = $Content -join $NewLine
+    $ScriptContent = Get-Content $_.FullName
+    $RawScriptContent = $ScriptContent -join $NewLine
     $SynopsisPattern = @('<#', '\.SYNOPSIS', '(.|', ')*', '#>') -join $NewLine
     $SynopsisRegex = [regex]::new($SynopsisPattern, 'IgnoreCase, Multiline')
-    $Synopsis = $SynopsisRegex.Match($RawContent).Value
-    $ScriptAst = [scriptblock]::Create($RawContent).Ast
-    $UsingContent = $ScriptAst.UsingStatements -join $NewLine
-    $FunctionHead = @($Synopsis, '', $UsingContent) -join $NewLine
-    $AttrsContent = $ScriptAst.ParamBlock.Attributes -join $NewLine
-    $FunctionParam = @($AttrsContent, $ScriptAst.ParamBlock) -join $NewLine
+    $Synopsis = $SynopsisRegex.Match($RawScriptContent).Value
+    $ScriptAst = [scriptblock]::Create($RawScriptContent).Ast
+    $Usings = $ScriptAst.UsingStatements -join $NewLine
+    $Attributes = $ScriptAst.ParamBlock.Attributes -join $NewLine
+    $FunctionHead = @($Synopsis, '', $Usings) -join $NewLine
+    $Parameters = @($Attributes, $ScriptAst.ParamBlock) -join $NewLine
     $FunctionBody = @('process', '{', "    & ""$($_.FullName)"" @args", '}') -join $NewLine
-    $FunctionContent = @($FunctionHead, '', $FunctionParam, '', $FunctionBody) -join $NewLine
-    $FunctionName = $_.BaseName
+    $FunctionContent = @($FunctionHead, '', $Parameters, '', $FunctionBody) -join $NewLine
     Set-Item Function:\$FunctionName $FunctionContent
-    $Content | Where-Object { $_ -imatch '^\[Alias\([''"].+[''"]\)\]$' } |
+    $ScriptContent | Where-Object { $_ -imatch '^\[Alias\([''"].+[''"]\)\]$' } |
     ForEach-Object { Set-Alias $_.Substring(8, $_.Length - 11) $FunctionName }
 }
