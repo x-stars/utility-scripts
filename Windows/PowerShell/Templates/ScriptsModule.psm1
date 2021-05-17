@@ -5,21 +5,25 @@
 
 Get-ChildItem $PSScriptRoot '*.ps1' -File | ForEach-Object `
 {
-    $FunctionName = $_.BaseName
     $NewLine = [System.Environment]::NewLine
-    $ScriptContent = Get-Content $_.FullName
+    $ScriptContent = $(Get-Content $_.FullName)
     $RawScriptContent = $ScriptContent -join $NewLine
-    $SynopsisPattern = @('<#', '\.SYNOPSIS', '(.|', ')*', '#>') -join $NewLine
-    $SynopsisRegex = [regex]::new($SynopsisPattern, 'IgnoreCase, Multiline')
-    $Synopsis = $SynopsisRegex.Match($RawScriptContent).Value
+    $HelpForward = ".FORWARDHELPTARGETNAME $($_.FullName)"
+    $CommentHelp = @('<#', $HelpForward, '#>') -join $NewLine
     $ScriptAst = [scriptblock]::Create($RawScriptContent).Ast
-    $Usings = $ScriptAst.UsingStatements -join $NewLine
+    $UsingStatements = $ScriptAst.UsingStatements -join $NewLine
+    $FunctionHead = @($CommentHelp, '', $UsingStatements) -join $NewLine
     $Attributes = $ScriptAst.ParamBlock.Attributes -join $NewLine
-    $FunctionHead = @($Synopsis, '', $Usings) -join $NewLine
-    $Parameters = @($Attributes, $ScriptAst.ParamBlock) -join $NewLine
-    $FunctionBody = @('process', '{', "    & ""$($_.FullName)"" @args", '}') -join $NewLine
-    $FunctionContent = @($FunctionHead, '', $Parameters, '', $FunctionBody) -join $NewLine
+    $ParamBlock = @($Attributes, $ScriptAst.ParamBlock) -join $NewLine
+    $EscapedPath = $_.FullName.Replace("'", "''")
+    $CallStatement = "& '$EscapedPath' @PSBoundParameters"
+    $ProcessBlock = @('process', '{', "    $CallStatement", '}') -join $NewLine
+    $FunctionBody = @($ParamBlock, '', $ProcessBlock) -join $NewLine
+    $FunctionContent = @($FunctionHead, '', $FunctionBody) -join $NewLine
+    $FunctionName = $_.BaseName
     Set-Item Function:\$FunctionName $FunctionContent
-    $ScriptContent | Where-Object { $_ -imatch '^\[Alias\([''"].+[''"]\)\]$' } |
-    ForEach-Object { Set-Alias $_.Substring(8, $_.Length - 11) $FunctionName }
+    $ScriptAst.ParamBlock.Attributes |
+    Where-Object { [string]$_.TypeName -ieq 'Alias' } |
+    ForEach-Object { $_.PositionalArguments.Value } |
+    ForEach-Object { Set-Alias $_ $FunctionName }
 }
