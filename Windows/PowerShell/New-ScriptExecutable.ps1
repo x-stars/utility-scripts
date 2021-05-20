@@ -20,6 +20,9 @@
 .PARAMETER NoExit
 指定创建的可执行文件在脚本文件执行完毕后不退出。
 
+.PARAMETER NoProfile
+指定创建的可执行文件在运行时不加载 PowerShell 配置。
+
 .PARAMETER NoWindow
 指定创建的可执行文件在运行时不显示 PowerShell 窗口。
 
@@ -90,6 +93,9 @@ param
     [switch]$NoExit
     ,
     [Parameter()]
+    [switch]$NoProfile
+    ,
+    [Parameter()]
     [switch]$NoWindow
 )
 
@@ -126,17 +132,17 @@ namespace XstarS.PowerShell.ScriptHost
         {
             // 设定临时文件的输出路径。
             var thisAsm = Assembly.GetExecutingAssembly();
-            var tempDirPath = Path.Combine(Path.GetTempPath(),
+            var tempDir = Path.Combine(Path.GetTempPath(),
                 "PowerShellScriptHost." + thisAsm.GetName().Name);
             var resNames = thisAsm.GetManifestResourceNames();
-            var tempPaths = new string[resNames.Length];
-            for (int i = 0; i < resNames.Length; i++)
+            var tempFiles = new string[resNames.Length];
+            for (int index = 0; index < resNames.Length; index++)
             {
-                tempPaths[i] = Path.Combine(tempDirPath, resNames[i]);
+                tempFiles[index] = Path.Combine(tempDir, resNames[index]);
             }
 
             // 获取临时脚本文件的路径，并将程序启动参数传递到此脚本文件。
-            var scriptPath = "\"" + tempPaths[0] + "\"" + " ";
+            var scriptPath = "\"" + tempFiles[0] + "\"" + " ";
             var scriptArgs = string.Empty;
             foreach (var arg in args)
             {
@@ -148,32 +154,35 @@ namespace XstarS.PowerShell.ScriptHost
             try
             {
                 // 将内嵌资源文件输出到临时文件夹。
-                if (!Directory.Exists(tempDirPath))
+                if (!Directory.Exists(tempDir))
                 {
-                    Directory.CreateDirectory(tempDirPath);
+                    Directory.CreateDirectory(tempDir);
                 }
-                for (int i = 0; i < resNames.Length; i++)
+                for (int index = 0; index < resNames.Length; index++)
                 {
-                    using (var res = thisAsm.GetManifestResourceStream(resNames[i]))
+                    using (var res = thisAsm.GetManifestResourceStream(resNames[index]))
                     {
-                        using (var file = File.OpenWrite(tempPaths[i]))
+                        using (var file = File.OpenWrite(tempFiles[index]))
                         {
                             res.CopyTo(file);
                         }
-                        File.SetAttributes(tempPaths[i], FileAttributes.Temporary);
+                        File.SetAttributes(tempFiles[index], FileAttributes.Temporary);
                     }
                 }
 
                 // 启动 PowerShell，执行临时脚本文件。
                 var powershell = Process.Start(new ProcessStartInfo()
                 {
-                    FileName = "powershell.exe",
+                    FileName = "PowerShell.exe",
                     Arguments =
                         "-NoLogo " +
-                        "-ExecutionPolicy Unrestricted " +
+#if NOPROFILE
+                        "-NoProfile " +
+#endif
 #if NOWINDOW
                         "-WindowStyle Hidden " +
 #endif
+                        "-ExecutionPolicy RemoteSigned " +
                         "-File " + scriptPath + scriptArgs,
                     UseShellExecute = false,
                 });
@@ -189,7 +198,7 @@ namespace XstarS.PowerShell.ScriptHost
                 try
                 {
                     // 删除临时文件。
-                    foreach (var tempPath in tempPaths)
+                    foreach (var tempPath in tempFiles)
                     {
                         if (File.Exists(tempPath))
                         {
@@ -197,10 +206,10 @@ namespace XstarS.PowerShell.ScriptHost
                         }
                     }
                     // 删除临时文件所在的文件夹。
-                    if (Directory.Exists(tempDirPath) &&
-                        Directory.GetFileSystemEntries(tempDirPath).Length == 0)
+                    if (Directory.Exists(tempDir) &&
+                        Directory.GetFileSystemEntries(tempDir).Length == 0)
                     {
-                        Directory.Delete(tempDirPath);
+                        Directory.Delete(tempDir);
                     }
                 }
                 catch (Exception ex)
@@ -223,6 +232,10 @@ namespace XstarS.PowerShell.ScriptHost
     {
         $scriptHostCode = "#define NOEXIT$([Environment]::NewLine)$scriptHostCode"
     }
+    if ($NoProfile)
+    {
+        $scriptHostCode = "#define NOPROFILE$([Environment]::NewLine)$scriptHostCode"
+    }
     if ($NoWindow)
     {
         $scriptHostCode = "#define NOWINDOW$([Environment]::NewLine)$scriptHostCode"
@@ -237,14 +250,14 @@ namespace XstarS.PowerShell.ScriptHost
 
 process
 {
-    for ($i = 0; $i -lt $Script.Length; $i++)
+    for ($index = 0; $index -lt $Script.Length; $index++)
     {
         # 根据路径获取脚本文件。
-        $scriptFile = $(Get-Item -LiteralPath $Script[$i])
+        $scriptFile = $(Get-Item -LiteralPath $Script[$index])
         # 设定创建可执行文件的路径。
-        if ($Path -and $Path[$i])
+        if ($Path -and $Path[$index])
         {
-            $executableFile = [FileInfo]::new($Path[$i])
+            $executableFile = [FileInfo]::new($Path[$index])
         }
         else
         {
