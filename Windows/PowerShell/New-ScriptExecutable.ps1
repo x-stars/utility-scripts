@@ -227,18 +227,11 @@ namespace XstarS.PowerShell.ScriptHost
 }
 '@
     # 定义编译器常量。
-    if ($NoExit)
-    {
-        $scriptHostCode = "#define NOEXIT$([Environment]::NewLine)$scriptHostCode"
-    }
-    if ($NoProfile)
-    {
-        $scriptHostCode = "#define NOPROFILE$([Environment]::NewLine)$scriptHostCode"
-    }
-    if ($NoWindow)
-    {
-        $scriptHostCode = "#define NOWINDOW$([Environment]::NewLine)$scriptHostCode"
-    }
+    $scriptHostDefines = @('TRACE')
+    if ($NoExit) { $scriptHostDefines += 'NOEXIT' }
+    if ($NoProfile) { $scriptHostDefines += 'NOPROFILE' }
+    if ($NoWindow) { $scriptHostCode += 'NOWINDOW' }
+    $scriptHostDefines = $($scriptHostDefines -join ',')
 
     # 获取引用文件。
     if ($Reference)
@@ -267,7 +260,7 @@ process
         # 设定 C# 编译器的参数。
         $compilerParam = [CompilerParameters]::new()
         $compilerParam.GenerateExecutable = $true
-        $compilerParam.CompilerOptions = '/optimize'
+        $compilerParam.CompilerOptions = "/optimize /define:$scriptHostDefines"
         # 设定编译器输出可执行文件的路径。
         $compilerParam.OutputAssembly = $executableFile.FullName
         Write-Verbose "$($executableFile.FullName)"
