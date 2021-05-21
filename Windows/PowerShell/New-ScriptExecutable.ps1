@@ -142,14 +142,12 @@ namespace XstarS.PowerShell.ScriptHost
             }
 
             // 获取临时脚本文件的路径，并将程序启动参数传递到此脚本文件。
-            var scriptPath = "\"" + tempFiles[0] + "\"" + " ";
-            var scriptArgs = string.Empty;
-            foreach (var arg in args)
-            {
-                scriptArgs += !(arg.Contains(" ") || arg.Contains("\t")) ? arg :
-                    !arg.Contains("\"") ? ("\"" + arg + "\"") : ("'" + arg + "'");
-                scriptArgs += " ";
-            }
+            var scriptFile = "\"" + tempFiles[0] + "\"";
+            var exeCmdLine = Environment.CommandLine;
+            var exeFile = Environment.GetCommandLineArgs()[0];
+            var exeLength = exeCmdLine.StartsWith("\"") ?
+                exeFile.Length + 2 : exeFile.Length;
+            var scriptCmdLine = scriptFile + exeCmdLine.Substring(exeLength);
 
             try
             {
@@ -166,26 +164,27 @@ namespace XstarS.PowerShell.ScriptHost
                         {
                             res.CopyTo(file);
                         }
-                        File.SetAttributes(tempFiles[index], FileAttributes.Temporary);
                     }
+                    File.SetAttributes(tempFiles[index], FileAttributes.Temporary);
                 }
 
                 // 启动 PowerShell，执行临时脚本文件。
-                var powershell = Process.Start(new ProcessStartInfo()
-                {
-                    FileName = "PowerShell.exe",
-                    Arguments =
-                        "-NoLogo " +
+                var powershell =
+                    Process.Start(new ProcessStartInfo()
+                    {
+                        FileName = "PowerShell.exe",
+                        Arguments =
+                            "-NoLogo " +
 #if NOPROFILE
-                        "-NoProfile " +
+                            "-NoProfile " +
 #endif
 #if NOWINDOW
-                        "-WindowStyle Hidden " +
+                            "-WindowStyle Hidden " +
 #endif
-                        "-ExecutionPolicy RemoteSigned " +
-                        "-File " + scriptPath + scriptArgs,
-                    UseShellExecute = false,
-                });
+                            "-ExecutionPolicy RemoteSigned " +
+                            "-File " + scriptCmdLine,
+                        UseShellExecute = false,
+                    });
                 powershell.WaitForExit();
                 Environment.ExitCode = powershell.ExitCode;
             }
@@ -268,7 +267,7 @@ process
         # 设定 C# 编译器的参数。
         $compilerParam = [CompilerParameters]::new()
         $compilerParam.GenerateExecutable = $true
-        $compilerParam.CompilerOptions = '/optimize '
+        $compilerParam.CompilerOptions = '/optimize'
         # 设定编译器输出可执行文件的路径。
         $compilerParam.OutputAssembly = $executableFile.FullName
         Write-Verbose "$($executableFile.FullName)"
