@@ -56,20 +56,20 @@ param
 
 process
 {
-    for ($i = 0; $i -lt $Uri.Length; $i++)
+    for ($index = 0; $index -lt $Uri.Length; $index++)
     {
-        $link = $Uri[$i]
-        if ($OutFile -and $OutFile[$i]) { $file = $OutFile[$i] }
-        else { $file = $(Split-Path $link.LocalPath -Leaf) }
+        $link = $Uri[$index]
+        $file = if ($OutFile -and $OutFile[$index]) { $OutFile[$index] }
+                else { Split-Path $link.LocalPath -Leaf }
         for ($success, $try = $false, 0; -not $success -and $try -lt 3; $try++)
         {
             try
             {
-                Invoke-WebRequest -Uri $link -OutFile $file -UseBasicParsing
+                Invoke-WebRequest $link -OutFile $file -UseBasicParsing
                 $success = $true
             }
             catch { Write-Warning $_ }
         }
-        Get-Item $file
+        Get-Item -LiteralPath $file
     }
 }
