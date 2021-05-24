@@ -1,55 +1,41 @@
 ﻿<#
 .SYNOPSIS
-创建一个能运行输入的 PowerShell 脚本的可执行文件。
-
+    创建一个能运行输入的 PowerShell 脚本的可执行文件。
 .DESCRIPTION
-创建一个能运行输入的 PowerShell 脚本的可执行文件。除脚本文件之外，还允许输入脚本文件所依赖的其他引用文件。
-输入的脚本文件和其他引用文件将会嵌入生成的可执行文件中，并在运行时输出为临时文件由 PowerShell 执行。
-在调用引用文件时，应使用 $(Join-Path $PSScriptRoot '(ReferenceName)') 命令来获取引用文件的路径。
-
+    创建一个能运行输入的 PowerShell 脚本的可执行文件。除脚本文件之外，还允许输入脚本文件所依赖的其他引用文件。
+    输入的脚本文件和其他引用文件将会嵌入生成的可执行文件中，并在运行时输出为临时文件由 PowerShell 执行。
+    在调用引用文件时，应使用 $(Join-Path $PSScriptRoot '(ReferenceName)') 命令来获取引用文件的路径。
 .PARAMETER Path
-可执行文件的路径。可带上参数名从管道接收值。
-默认为当前目录下与脚本文件同名的 *.exe 文件。
-
+    可执行文件的路径。可带上参数名从管道接收值。
+    默认为当前目录下与脚本文件同名的 *.exe 文件。
 .PARAMETER Script
-脚本文件的路径。可从管道接收值。
-
+    脚本文件的路径。可从管道接收值。
 .PARAMETER Reference
-脚本文件引用的其他文件的路径。
-
+    脚本文件引用的其他文件的路径。
 .PARAMETER NoExit
-指定创建的可执行文件在脚本文件执行完毕后不退出。
-
+    指定创建的可执行文件在脚本文件执行完毕后不退出。
 .PARAMETER NoProfile
-指定创建的可执行文件在运行时不加载 PowerShell 配置。
-
+    指定创建的可执行文件在运行时不加载 PowerShell 配置。
 .PARAMETER NoWindow
-指定创建的可执行文件在运行时不显示 PowerShell 窗口。
-
+    指定创建的可执行文件在运行时不显示 PowerShell 窗口。
 .INPUTS
-System.String[]
-脚本文件的路径。
-
+    System.String[]
+    脚本文件的路径。
 .OUTPUTS
-System.IO.FileInfo[]
-创建的可执行文件。
-
+    System.IO.FileInfo[]
+    创建的可执行文件。
 .NOTES
-作者：天南十字星 https://github.com/x-stars
-原作者：Mooser Lee https://www.pstips.net/
-参考来源：https://www.pstips.net/convert-ps1toexe.html
-
+    作者：天南十字星 https://github.com/x-stars
+    原作者：Mooser Lee https://www.pstips.net/
+    参考来源：https://www.pstips.net/convert-ps1toexe.html
 .EXAMPLE
-New-ScriptExecutable.ps1 .\GetSomething.exe -Script .\Get-Something.ps1
-
+    New-ScriptExecutable.ps1 .\GetSomething.exe -Script .\Get-Something.ps1
 .EXAMPLE
-Get-ChildItem *.ps1 | New-ScriptExecutable.ps1
-
+    Get-ChildItem *.ps1 | New-ScriptExecutable.ps1
 .EXAMPLE
-Get-ChildItem *.ps1 | New-ScriptExecutable.ps1 -Reference $(Get-ChildItem .\SomeModule\*)
-
+    Get-ChildItem *.ps1 | New-ScriptExecutable.ps1 -Reference $(Get-ChildItem .\SomeModule\*)
 .LINK
-https://www.pstips.net/convert-ps1toexe.html
+    https://www.pstips.net/convert-ps1toexe.html
 #>
 
 using namespace System
