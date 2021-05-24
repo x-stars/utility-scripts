@@ -32,6 +32,7 @@ function prompt
     [System.Console]::ResetColor()
     Write-Output '> '
 }
+Set-PSReadLineOption -PromptText '> '
 
 # 导入脚本文件目录。
 $env:Path += $PathSep + $(Join-Path $(Split-Path $PROFILE -Parent) 'Scripts')
