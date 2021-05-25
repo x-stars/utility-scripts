@@ -108,13 +108,12 @@ namespace XstarS.PowerShell.ScriptHost
     /// <summary>
     /// PowerShell 内嵌脚本宿主程序。
     /// </summary>
-    public static class Program
+    internal static class Program
     {
         /// <summary>
         /// PowerShell 内嵌脚本宿主程序入口点。
         /// </summary>
-        /// <param name="args">程序启动参数。</param>
-        public static void Main(string[] args)
+        internal static void Main()
         {
             // 设定临时文件的输出路径。
             var thisAsm = Assembly.GetExecutingAssembly();
@@ -127,13 +126,15 @@ namespace XstarS.PowerShell.ScriptHost
                 tempFiles[index] = Path.Combine(tempDir, resNames[index]);
             }
 
-            // 获取临时脚本文件的路径，并将程序启动参数传递到此脚本文件。
-            var scriptFile = "\"" + tempFiles[0] + "\"";
+            // 将程序启动参数传递到临时脚本文件。
+            var scriptFile = (tempFiles.Length != 0) ?
+                ("\"" + tempFiles[0] + "\"") : "";
             var exeCmdLine = Environment.CommandLine;
             var exeFile = Environment.GetCommandLineArgs()[0];
             var exeLength = exeCmdLine.StartsWith("\"") ?
                 exeFile.Length + 2 : exeFile.Length;
-            var scriptCmdLine = scriptFile + exeCmdLine.Substring(exeLength);
+            var scriptArgs = exeCmdLine.Substring(exeLength);
+            var scriptCmdLine = scriptFile + scriptArgs;
 
             try
             {
@@ -154,7 +155,7 @@ namespace XstarS.PowerShell.ScriptHost
                     File.SetAttributes(tempFiles[index], FileAttributes.Temporary);
                 }
 
-                // 启动 PowerShell，执行临时脚本文件。
+                // 以 PowerShell 执行临时脚本文件。
                 var powershell =
                     Process.Start(new ProcessStartInfo()
                     {
@@ -176,18 +177,20 @@ namespace XstarS.PowerShell.ScriptHost
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex);
+                // 输出异常信息并设置错误码。
+                Console.Error.WriteLine(ex);
+                Environment.ExitCode = ex.HResult;
             }
             finally
             {
                 try
                 {
                     // 删除临时文件。
-                    foreach (var tempPath in tempFiles)
+                    foreach (var tempFile in tempFiles)
                     {
-                        if (File.Exists(tempPath))
+                        if (File.Exists(tempFile))
                         {
-                            File.Delete(tempPath);
+                            File.Delete(tempFile);
                         }
                     }
                     // 删除临时文件所在的文件夹。
@@ -199,11 +202,14 @@ namespace XstarS.PowerShell.ScriptHost
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine(ex);
+                    // 输出异常信息并设置错误码。
+                    Console.Error.WriteLine(ex);
+                    Environment.ExitCode = ex.HResult;
                 }
                 finally
                 {
 #if NOEXIT
+                    // 等待用户按键输入。
                     Console.ReadKey();
 #endif
                 }
@@ -233,15 +239,14 @@ process
         # 根据路径获取脚本文件。
         $scriptFile = $(Get-Item -LiteralPath $Script[$index])
         # 设定创建可执行文件的路径。
-        if ($Path -and $Path[$index])
-        {
-            $executableFile = [FileInfo]::new($Path[$index])
-        }
-        else
-        {
-            $executableFile = [FileInfo]::new(
-                $(Join-Path $(Get-Location) "$($scriptFile.BaseName).exe"))
-        }
+        $executablePath =
+            if ($Path -and $Path[$index]) { $Path[$index] }
+            else { "$($scriptFile.BaseName).exe" }
+        $executableFile =
+            if (Test-Path $executablePath)
+            { $(Get-Item -LiteralPath $executablePath) }
+            else
+            { $(New-Item -Path $executablePath -Force) }
 
         # 设定 C# 编译器的参数。
         $compilerParam = [CompilerParameters]::new()
