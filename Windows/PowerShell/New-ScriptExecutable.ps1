@@ -179,7 +179,7 @@ namespace XstarS.PowerShell.ScriptHost
             {
                 // 输出异常信息并设置错误码。
                 Console.Error.WriteLine(ex);
-                Environment.ExitCode = ex.HResult;
+                Environment.ExitCode = (ushort)ex.HResult;
             }
             finally
             {
@@ -204,7 +204,7 @@ namespace XstarS.PowerShell.ScriptHost
                 {
                     // 输出异常信息并设置错误码。
                     Console.Error.WriteLine(ex);
-                    Environment.ExitCode = ex.HResult;
+                    Environment.ExitCode = (ushort)ex.HResult;
                 }
                 finally
                 {
