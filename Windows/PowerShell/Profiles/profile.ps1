@@ -4,14 +4,17 @@
 #>
 
 # 设定自定义全局变量。
-Set-Variable NewLine $([System.Environment]::NewLine) -Option ReadOnly -Force
-Set-Variable DirSep $([System.IO.Path]::DirectorySeparatorChar) -Option ReadOnly -Force
-Set-Variable PathSep $([System.IO.Path]::PathSeparator) -Option ReadOnly -Force
+Set-Variable -Option ReadOnly -Force `
+    NewLine $([System.Environment]::NewLine)
+Set-Variable -Option ReadOnly -Force `
+    DirSep $([System.IO.Path]::DirectorySeparatorChar)
+Set-Variable -Option ReadOnly -Force `
+    PathSep $([System.IO.Path]::PathSeparator)
 
 # 设定自定义命令别名。
-Set-Alias eval Invoke-Expression -Force
-Set-Alias new New-Object -Force
-Set-Alias out Out-File -Force
+Set-Alias -Force eval Invoke-Expression
+Set-Alias -Force new New-Object
+Set-Alias -Force out Out-File
 
 # 定义命令提示的配置。
 function prompt
@@ -34,8 +37,18 @@ function prompt
 }
 Set-PSReadLineOption -PromptText '> '
 
+# 设置内置变量配置。
+Set-Variable OutputEncoding $([System.Text.Encoding]::UTF8)
+
 # 导入脚本文件目录。
-$env:Path += $PathSep + $(Join-Path $(Split-Path $PROFILE -Parent) 'Scripts')
+if (Test-Path $(Join-Path $(Split-Path $PROFILE -Parent) 'Scripts'))
+{
+    $env:Path += $PathSep + $(Join-Path $(Split-Path $PROFILE -Parent) 'Scripts')
+}
+
 # 导入当前用户模块。
-Get-ChildItem $(Join-Path $(Split-Path $PROFILE -Parent) 'Modules') -Directory |
-ForEach-Object Name | Import-Module -ErrorAction SilentlyContinue
+if (Test-Path $(Join-Path $(Split-Path $PROFILE -Parent) 'Modules'))
+{
+    Get-ChildItem $(Join-Path $(Split-Path $PROFILE -Parent) 'Modules') -Directory |
+    ForEach-Object Name | Import-Module -ErrorAction SilentlyContinue
+}
