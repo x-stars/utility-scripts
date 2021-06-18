@@ -1,15 +1,10 @@
-@ REM Get absolute path.
-@ SET ARGS=%*
-@ IF NOT DEFINED ARGS (
-    @ CD
-    @ GOTO ENDLOOP_ARGS
-)
+@ REM List arguments.
 : LOOP_ARGS
 @ SET ARG=%1
 @ IF NOT DEFINED ARG (
     @ GOTO ENDLOOP_ARGS
 )
-@ ECHO %~f1
+@ ECHO:%~1
 @ SHIFT /1
 @ GOTO LOOP_ARGS
 : ENDLOOP_ARGS
