@@ -1,12 +1,10 @@
 @ REM Run Git command recursively.
 @ FOR /R %%P IN (.) DO @ (
-    @ PUSHD %%~fP
-    @ IF EXIST .git\ @ (
-        @ ECHO=
-        @ ECHO %%~fP
-        @ ECHO=
+    @ IF EXIST "%%~fP\.git\" @ (
+        @ PUSHD "%%~fP"
+        @ ECHO [35m%%~fP[0m
         @ git %*
         @ ECHO=
+        @ POPD
     )
-    @ POPD
 )
