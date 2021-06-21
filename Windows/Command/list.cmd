@@ -1,7 +1,7 @@
 @ REM List arguments.
 : LOOP_ARGS
 @ SET ARG=%1
-@ IF NOT DEFINED ARG (
+@ IF NOT DEFINED ARG @ (
     @ GOTO ENDLOOP_ARGS
 )
 @ ECHO:%~1

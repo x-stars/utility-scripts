@@ -1,12 +1,12 @@
 @ REM Get absolute path.
 @ SET ARGS=%*
-@ IF NOT DEFINED ARGS (
-    @ CD
+@ IF NOT DEFINED ARGS @ (
+    @ CHDIR
     @ GOTO ENDLOOP_ARGS
 )
 : LOOP_ARGS
 @ SET ARG=%1
-@ IF NOT DEFINED ARG (
+@ IF NOT DEFINED ARG @ (
     @ GOTO ENDLOOP_ARGS
 )
 @ ECHO %~f1
