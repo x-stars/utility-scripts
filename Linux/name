@@ -1,18 +1,26 @@
 #!/bin/sh
 
-if [ -z "$1" ]
-then
-    NAME="."
-else
-    NAME="$1"
+if [ $# -eq 0 ]; then
+    pwd
+    exit
 fi
 
-if [ -d "$NAME" ]
-then
-    cd "$NAME" && pwd
-else
-    DIR=`dirname "$NAME"`
-    DIR=`cd "$DIR" && pwd`
-    FILE=`basename "$NAME"`
-    echo "$DIR/$FILE"
+if type realpath 1>/dev/null 2>&1; then
+    realpath -ms -- "$@"
+    exit
 fi
+
+for NAME in "$@"; do
+    if [ -d "$NAME" -a -x "$NAME" ]; then
+        FDIR=`cd -- "$NAME" && pwd`
+        echo "$FDIR"
+    elif DIR=`dirname -- "$NAME" && pwd` &&
+        [ -d "$DIR" -a -x "$DIR" ]; then
+        FDIR=`cd -- "$DIR" && pwd`
+        FILE=`basename -- "$NAME"`
+        test "$FDIR" = / && FDIR=
+        echo "$FDIR/$FILE"
+    else
+        readlink -m -- "$NAME"
+    fi
+done
