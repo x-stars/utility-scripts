@@ -5,7 +5,7 @@ if [ $# -eq 0 ]; then
     exit
 fi
 
-for NAME in $*; do
+for NAME in "$@"; do
     cat /etc/os-release |
     grep "^$NAME=" |
     awk -F= '{ print $2 }' |

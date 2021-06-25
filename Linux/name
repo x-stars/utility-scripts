@@ -15,7 +15,7 @@ for NAME in "$@"; do
         FDIR=`cd -- "$NAME" && pwd`
         echo "$FDIR"
     elif DIR=`dirname -- "$NAME" && pwd` &&
-        [ -d "$DIR" -a -x "$DIR" ]; then
+         [ -d "$DIR" -a -x "$DIR" ]; then
         FDIR=`cd -- "$DIR" && pwd`
         FILE=`basename -- "$NAME"`
         test "$FDIR" = / && FDIR=

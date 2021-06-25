@@ -3,8 +3,8 @@
 function os-info
 {
     cat /etc/os-release |
-    grep ^$1= |
-    awk -F '=' '{ print $2 }' |
+    grep "^$1=" |
+    awk -F= '{ print $2 }' |
     sed 's/"//g'
 }
 
