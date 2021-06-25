@@ -3,7 +3,8 @@
 @ REM Initialize %Path% variable.
 @ SET SysEnvKey=HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Environment
 @ FOR /F "tokens=1,2,*" %%A IN (
-    '@ REG QUERY "%SysEnvKey%" /V "Path" ^| @ FINDSTR "Path"') DO @ SET SysPath=%%C
+    '@ REG QUERY "%SysEnvKey%" /V "Path" ^| @ FINDSTR "Path"'
+) DO @ SET SysPath=%%C
 @ IF "%SysPath:~-1%"==";" @ SET SysPath=%SysPath:~0,-1%
 
 @ REM Download and install 7-Zip CLI for Windows x64.
