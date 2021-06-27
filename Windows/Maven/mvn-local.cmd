@@ -6,7 +6,7 @@
 : LOOP_FINDLOCAL
 @ SET LOCAL_FILE=!CD!\!LOCAL_NAME!
 @ IF NOT EXIST "!LOCAL_FILE!" @ (
-    @ IF NOT "!CD:~-1!"=="\" @ (
+    @ IF NOT "!CD:~-1!" == "\" @ (
         @ CHDIR ..
         @ GOTO LOOP_FINDLOCAL
     )

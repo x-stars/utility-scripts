@@ -5,7 +5,7 @@
     @ EXIT /B 255
 )
 @ SET DEFAULT_KEY=%USERPROFILE%\.ssh\id_rsa
-@ IF "%~1"=="-i" @ (
+@ IF "%~1" == "-i" @ (
     @ SET LOCAL_KEY=%~2
     @ SET REMOTE_HOST=%~3
 ) ELSE @ (
@@ -13,7 +13,7 @@
     @ SET REMOTE_HOST=%~1
 )
 @ IF NOT EXIST "%LOCAL_KEY%" @ (
-    @ IF NOT "%~1"=="-i" @ (
+    @ IF NOT "%~1" == "-i" @ (
         @ ssh-keygen -t rsa -P "" -f "%DEFAULT_KEY%"
     )
 )
