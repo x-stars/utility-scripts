@@ -1,0 +1,56 @@
+#!/bin/sh
+
+IDXSEQ=$(seq 0 7)
+CUBSEQ=$(seq 0 5)
+COLSEQ=$(seq 0 11)
+
+printf "\e[1;4m%-16s%-16s\e[0m\n" "16-Color" "^[[?m"
+for RNG in 3 4; do
+    for IDX in $IDXSEQ; do
+        NUM=$(($RNG * 10 + $IDX))
+        printf "\e[%dm%4d\e[0m" $NUM $NUM
+    done
+    echo
+done
+
+printf "\e[1;4m%-16s%-16s\e[0m\n" "16-Color" "^[[?m"
+for RNG in 3 4 9 10; do
+    for IDX in $IDXSEQ; do
+        NUM=$(($RNG * 10 + $IDX))
+        printf "\e[%dm%4d\e[0m" $NUM $NUM
+    done
+    echo
+done
+
+for RNG in 3 4; do
+    printf "\e[1;4m%-16s%-16s\e[0m\n" "256-Color" "^[[${RNG}8;5;?m"
+
+    for ROW in 0 1; do
+        for COL in $IDXSEQ; do
+            NUM=$(($ROW * 8 + $COL))
+            printf "\e[%d8;5;%dm%4d\e[0m" $RNG $NUM $NUM
+        done
+        echo
+    done
+
+    for OFF in 16 88 160; do
+        for ROW in $CUBSEQ; do
+            for SEC in 0 36; do
+                for COL in $CUBSEQ; do
+                    NUM=$(($OFF + $ROW * 6 + $SEC + $COL))
+                    printf "\e[%d8;5;%dm%4d\e[0m" $RNG $NUM $NUM
+                done
+            done
+            echo
+        done
+    done
+
+    OFF=232
+    for ROW in 0 1; do
+        for COL in $COLSEQ; do
+            NUM=$(($OFF + $ROW * 12 + $COL))
+            printf "\e[%d8;5;%dm%4d\e[0m" $RNG $NUM $NUM
+        done
+        echo
+    done
+done
