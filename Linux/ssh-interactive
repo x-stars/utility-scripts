@@ -1,0 +1,9 @@
+#!/bin/sh
+KNOWN_DESTS="$HOME/.ssh/known_destinations"
+echo "Known destinations:"
+cat "$KNOWN_DESTS" 2>/dev/null
+read -r -p "Destination: " DESTINATION
+test -n "$DESTINATION" || exit 255
+grep -Fx -q "$DESTINATION" "$KNOWN_DESTS" 2>/dev/null ||
+printf "%s\n" "$DESTINATION" >> "$KNOWN_DESTS"
+ssh $DESTINATION "$@"
