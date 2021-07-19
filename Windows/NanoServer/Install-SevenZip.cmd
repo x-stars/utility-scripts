@@ -1,4 +1,5 @@
 @ REM Install 7-Zip CLI on Windows NanoServer x64.
+@ SETLOCAL ENABLEDELAYEDEXPANSION
 
 @ REM Initialize %Path% variable.
 @ SET SysEnvKey=HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Environment
@@ -20,3 +21,4 @@
 
 @ REM Verify 7-Zip CLI executable file.
 @ DIR "%Z7Path%\7za.exe" 1>NUL
+@ ENDLOCAL

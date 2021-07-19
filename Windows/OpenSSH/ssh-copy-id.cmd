@@ -1,4 +1,5 @@
 @ REM Copy public key of local host to remote host.
+@ SETLOCAL ENABLEDELAYEDEXPANSION
 @ SET ARGS=%*
 @ IF NOT DEFINED ARGS @ (
     @ ECHO>&2 usage: %~n0 [-i identity_file] [user@]hostname
@@ -25,3 +26,4 @@
 @ FOR /F "delims=" %%L IN ('@ TYPE "%LOCAL_KEY%"') DO @ (
     @ ssh %REMOTE_HOST% "echo>>%REMOTE_KEYS% %%L"
 )
+@ ENDLOCAL
