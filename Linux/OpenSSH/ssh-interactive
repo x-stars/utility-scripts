@@ -1,9 +1,10 @@
 #!/bin/sh
+test -d "$HOME/.ssh" || mkdir "$HOME/.ssh"
 KNOWN_DESTS="$HOME/.ssh/known_destinations"
-echo "Known destinations:"
-cat "$KNOWN_DESTS" 2>/dev/null
+test -f "$KNOWN_DESTS" || touch "$KNOWN_DESTS"
+echo "Known destinations:" && cat "$KNOWN_DESTS"
 read -r -p "Destination: " DESTINATION
 test -n "$DESTINATION" || exit 255
-grep -Fx -q "$DESTINATION" "$KNOWN_DESTS" 2>/dev/null ||
+grep -Fx -q "$DESTINATION" "$KNOWN_DESTS" ||
 printf "%s\n" "$DESTINATION" >> "$KNOWN_DESTS"
 ssh $DESTINATION "$@"
