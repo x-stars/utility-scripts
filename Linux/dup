@@ -1,0 +1,30 @@
+#!/bin/sh
+
+EXPR= && OPTS= && HELP=
+while [ $# -gt 0 ]; do
+    case "$1" in
+        *:*)EXPR="$EXPR""s:$1:g;";;
+        --) shift 1; break;;
+        -r) OPTS="$1";;
+        -*) HELP=yes;;
+        *)  break;;
+    esac
+    shift 1
+done
+test -n "$EXPR" || EXPR='s:$:~:g'
+
+if [ $# -eq 0 ] || [ -n "$HELP" ]; then
+    NAME=`basename "$0"`
+    echo>&2 "Usage: $NAME [-r] [FROM:TO]... FILE..."
+    echo>&2 'Duplicate and rename files by FROM:TO exprs.'
+    echo>&2 'FROM:TO exprs use regexp; default value: $:~'
+    echo>&2 'Options:'
+    echo>&2 '    -r: using extended regular expressions.'
+fi
+
+for FILE in "$@"; do
+    DIR=`dirname "$FILE"`
+    DUP=`basename "$FILE" |
+         sed $OPTS "$EXPR"`
+    cp -r "$FILE" "$DIR/$DUP"
+done

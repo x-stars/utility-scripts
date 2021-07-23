@@ -1,0 +1,35 @@
+#!/bin/sh
+
+SHELL= && HELP=
+while [ $# -gt 0 ]; do
+    case "$1" in
+        --) shift 1; break;;
+        -s) SHELL="$2";;
+        -*) HELP=yes;;
+        *)  break;;
+    esac
+    shift 1
+done
+test -n "$SHELL" || SHELL=/bin/sh
+
+if [ $# -eq 0 ] || [ -n "$HELP" ]; then
+    NAME=`basename "$0"`
+    echo>&2 "Usage: $NAME [-s SHELL] FILE..."
+    echo>&2 'Create scripts with specific interpreter.'
+    echo>&2 'Options:'
+    echo>&2 '    -s: interpreter path of new scripts.'
+    echo>&2 '        default value: /bin/sh'
+    echo>&2 'Variables:'
+    echo>&2 '    $EDITOR: script editor path or name.'
+    exit 255
+fi
+
+set -o noclobber
+for FILE in "$@"; do
+    echo "#!$SHELL" > "$FILE"
+done
+chmod +x "$@"
+
+if [ -x "$EDITOR" ]; then
+    "$EDITOR" "$@"
+fi
