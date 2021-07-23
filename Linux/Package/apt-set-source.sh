@@ -1,11 +1,11 @@
-#!/bin/bash
+#!/bin/sh
 
 ARC_SOURCE=archive.ubuntu.com
 SEC_SOURCE=security.ubuntu.com
 
 NEW_SOURCE=$1
 while [ "$NEW_SOURCE" = "" ]; do
-    read -p "New source: " NEW_SOURCE
+    read -r -p "New source: " NEW_SOURCE
 done
 
 SOURCE_LIST=/etc/apt/sources.list

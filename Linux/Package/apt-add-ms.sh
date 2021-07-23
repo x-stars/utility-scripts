@@ -1,15 +1,15 @@
-#!/bin/bash
+#!/bin/sh
 
-function os-info
+osinfo ()
 {
     cat /etc/os-release |
-    grep "^$1=" |
+    grep "^$*=" |
     awk -F= '{ print $2 }' |
     sed 's/"//g'
 }
 
-ID=$(os-info ID)
-VERSION_ID=$(os-info VERSION_ID)
+ID=$(osinfo ID)
+VERSION_ID=$(osinfo VERSION_ID)
 
 curl https://packages.microsoft.com/keys/microsoft.asc |
 apt-key add -
