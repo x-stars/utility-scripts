@@ -1,5 +1,5 @@
 @ REM Run program as Administrator.
-@ SETLOCAL ENABLEDELAYEDEXPANSION
+@ SETLOCAL ENABLEEXTENSIONS
 @ SET ARGS=%*
 @ IF DEFINED ARGS @ SET ARGS=%ARGS:'=''%
 @ PowerShell -NoProfile -Command ^

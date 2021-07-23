@@ -1,5 +1,5 @@
 @ REM Copy public key of local host to remote host.
-@ SETLOCAL ENABLEDELAYEDEXPANSION
+@ SETLOCAL ENABLEEXTENSIONS
 @ SET ARGS=%*
 @ IF NOT DEFINED ARGS @ (
     @ ECHO>&2 usage: %~n0 [-i identity_file] [user@]hostname

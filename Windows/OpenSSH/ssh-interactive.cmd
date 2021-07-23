@@ -1,5 +1,5 @@
 @ REM Create SSH connection interactively.
-@ SETLOCAL ENABLEDELAYEDEXPANSION
+@ SETLOCAL ENABLEEXTENSIONS
 @ SET SSH_HOME=%UserProfile%\.ssh
 @ IF NOT EXIST "%SSH_HOME%" @ MKDIR "%SSH_HOME%"
 @ SET KNOWN_DESTS=%SSH_HOME%\known_destinations

@@ -1,11 +1,12 @@
-@ REM Convert Windows paths in arguments to MinGW paths.
+@ REM Convert Windows paths to MinGW paths.
 @ SETLOCAL ENABLEDELAYEDEXPANSION
 @ SET CD=
 @ SET ARGS=
 : LOOP_ARGS
 @ SET ARG=%1
 @ IF NOT DEFINED ARG @ GOTO ENDLOOP_ARGS
-@ ECHO:!ARG! | @ FINDSTR /V "[\\][\\]" | @ FINDSTR "[\\]" 1>NUL
+@ ECHO:!ARG! | @ FINDSTR /V "[\\][\\]" ^
+             | @ FINDSTR "[\\]" 1>NUL
 @ IF NOT ERRORLEVEL 1 @ (
     @ SET ARG=%~1
     @ ECHO:!ARG! | @ FINDSTR "^[\\]" 1>NUL
