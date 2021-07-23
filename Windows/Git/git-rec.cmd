@@ -1,17 +1,28 @@
 @ REM Run Git command recursively.
-@ SETLOCAL ENABLEDELAYEDEXPANSION
-@ SET CD=& SET ROOT=!CD!
-@ SET HEAD=^^^>^^^>^^^> [35m
-@ SET TAIL=[0m ^^^<^^^<^^^<
+@ SETLOCAL ENABLEEXTENSIONS
+@ CALL:MAIN %* 
+@ ENDLOCAL
+@ EXIT /B
+
+: MAIN
+@ SET CD=
+@ SET ROOT=%CD%
 @ FOR /R %%P IN (.) DO @ (
     @ IF EXIST "%%~fP\.git" @ (
         @ CHDIR %%~fP
         @ SET REPO=%%~fP
-        @ SET REPO=!REPO:%CD%=.!
-        @ SET REPO=!REPO:.\=!
-        @ ECHO %HEAD%!REPO!%HEAD%
-        @ git %* & ECHO=
+        @ CALL:HEADER
+        @ git %*
+        @ ECHO=
         @ CHDIR %ROOT%
     )
 )
-@ ENDLOCAL
+@ EXIT /B
+
+: HEADER
+@ SET HEAD=^^^>^^^>^^^> [35m
+@ SET TAIL=[0m ^^^<^^^<^^^<
+@ CALL SET REPO=%%REPO:%ROOT%=.%%
+@ SET REPO=%REPO:\=/%
+@ SET REPO=%REPO:./=%
+@ ECHO %HEAD%%REPO%%TAIL%
