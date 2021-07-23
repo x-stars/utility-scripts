@@ -15,5 +15,5 @@ if [ -e "$SOURCE_LIST.org" ]; then
 fi
 cp $SOURCE_LIST $SOURCE_LIST.org
 
-sed -i "s/$ARC_SOURCE/$NEW_SOURCE/g" $SOURCE_LIST
-sed -i "s/$SEC_SOURCE/$NEW_SOURCE/g" $SOURCE_LIST
+sed -i "s,$ARC_SOURCE,$NEW_SOURCE,g" $SOURCE_LIST
+sed -i "s,$SEC_SOURCE,$NEW_SOURCE,g" $SOURCE_LIST
