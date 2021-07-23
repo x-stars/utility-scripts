@@ -11,7 +11,7 @@ find . -name .git |
 while read DGIT; do
     REPO=`dirname "$DGIT" |
           sed 's=./=='`
-    cd "$REPO"
+    cd -- "$REPO"
     printf "$FORMAT" "$REPO"
     git "$@"
     printf "\n"
