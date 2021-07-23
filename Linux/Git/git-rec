@@ -1,10 +1,10 @@
 #!/bin/sh
 
-if file "`readlink -f /proc/$$/fd/1`" |
-   grep -q 'character special'; then
-    FORMAT="\e[35m%s\e[0m\n"
+if file -b "`readlink -f /proc/$$/fd/1`" |
+   grep -Fq 'character special'; then
+    FORMAT=">>> \e[35m%s\e[0m <<<\n"
 else
-    FORMAT="%s\n"
+    FORMAT=">>> %s <<<\n"
 fi
 
 find . -name .git |
