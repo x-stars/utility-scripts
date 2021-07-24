@@ -7,4 +7,4 @@ read -r -p "Destination: " DESTINATION
 test -n "$DESTINATION" || exit 255
 grep -Fx -q "$DESTINATION" "$KNOWN_DESTS" ||
 printf "%s\n" "$DESTINATION" >> "$KNOWN_DESTS"
-ssh $DESTINATION "$@"
+ssh $SSH_OPTIONS $DESTINATION "$@"
