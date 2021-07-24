@@ -8,24 +8,17 @@
 @ CALL:PARSE %*
 @ IF ERRORLEVEL 1 @ CALL:USAGE & EXIT /B 255
 @ IF NOT EXIST "%ID_FILE%" @ (
-    @ IF "%ID_FILE%" == "%DEFAULT_ID%" @ (
-        @ ssh-keygen -t rsa -P "" -f "%DEFAULT_ID%"
-    )
-)
-@ IF NOT EXIST "%ID_FILE%" @ (
     @ ECHO>&2 error: no identity file in %ID_FILE%
+    @ ECHO>&2        use ssh-keygen to generate one
     @ EXIT /B 255
 )
+@ SET OPTIONS=%PORT_OPT% %SSH_OPTS%
 @ SET KEYS_FILE=.ssh/authorized_keys
-@ FOR /F "delims=" %%L IN ('@ TYPE "%ID_FILE%"') DO @ (
-    @ ssh %DESTINATION% echo^>^>%KEYS_FILE% %%L
-    @ SET COPYMSG=public key %ID_FILE% copy to %DESTINATION%
-    @ IF ERRORLEVEL 1 @ (
-        @ ECHO>&2 error: %COPYMSG% failed
-    ) ELSE @ (
-        @ ECHO>&2 info: %COPYMSG% succeed
-    )
-)
+@ SET COPYMSG=public key %ID_FILE% copy to %DESTINATION%
+@ FOR /F "delims=" %%K IN ('@ TYPE "%ID_FILE%"') DO @ SET KEY=%%K
+@ ssh %OPTIONS% %DESTINATION% echo^>^>%KEYS_FILE% %KEY%
+@ IF ERRORLEVEL 1 (@ ECHO>&2 error: %COPYMSG% failed) ^
+  ELSE            (@ ECHO>&2 info: %COPYMSG% succeed)
 @ EXIT /B
 
 : PARSE
