@@ -1,5 +1,6 @@
 @ REM Install .NET Core on Windows NanoServer x64.
 @ SETLOCAL ENABLEEXTENSIONS
+@ SET ERRORLEVEL=
 
 @ REM Initialize %Path% variable.
 @ SET SysEnvKey=HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Environment
@@ -28,4 +29,5 @@
 
 @ REM Verify .NET Core SDK executable file.
 @ DIR "%NETPath%\dotnet.exe" 1>NUL
+@ EXIT /B %ERRORLEVEL%
 @ ENDLOCAL

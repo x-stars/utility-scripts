@@ -1,8 +1,9 @@
 @ REM Run Git command recursively.
 @ SETLOCAL ENABLEEXTENSIONS
+@ SET ERRORLEVEL=
 @ CALL:MAIN %* 
+@ EXIT /B %ERRORLEVEL%
 @ ENDLOCAL
-@ EXIT /B
 
 : MAIN
 @ SET CD=
@@ -17,7 +18,7 @@
         @ CHDIR %ROOT%
     )
 )
-@ EXIT /B
+@ EXIT /B %ERRORLEVEL%
 
 : HEADER
 @ SET HEAD=^^^>^^^>^^^> [35m
@@ -28,4 +29,4 @@
 @ SET REPO=!REPO:./=!
 @ ECHO %HEAD%!REPO!%TAIL%
 @ ENDLOCAL
-@ EXIT /B
+@ EXIT /B %ERRORLEVEL%

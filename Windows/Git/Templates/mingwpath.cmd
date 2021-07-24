@@ -1,8 +1,9 @@
 @ REM Convert Windows paths to MinGW paths.
 @ SETLOCAL ENABLEEXTENSIONS
+@ SET ERRORLEVEL=
 @ CALL:MAIN %*
+@ EXIT /B %ERRORLEVEL%
 @ ENDLOCAL
-@ EXIT /B
 
 : MAIN
 @ SET CD=
@@ -25,7 +26,7 @@
 @ GOTO LOOP_ARGS
 : ENDLOOP_ARGS
 @ IF DEFINED ARGS @ ECHO:%ARGS%
-@ EXIT /B
+@ EXIT /B %ERRORLEVEL%
 
 : CONVERT
 @ IF DEFINED ARGS @ ECHO:%ARGS%
@@ -42,7 +43,7 @@
 @ SET ARG=%ARG:\=/%
 @ SET ARG=%ARG:`=\`%
 @ SET ARG="%ARG%"
-@ EXIT /B
+@ EXIT /B %ERRORLEVEL%
 
 : CAPITAL
 @ SET DRV=%ARG:~0,1%
@@ -51,4 +52,4 @@
     n o p q r s t u v w x y z
 ) DO @ CALL SET DRV=%%DRV:%%C=%%C%%
 @ SET ARG=/%DRV%%ARG:~2%
-@ EXIT /B
+@ EXIT /B %ERRORLEVEL%

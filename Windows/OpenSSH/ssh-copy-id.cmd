@@ -1,8 +1,9 @@
 @ REM Copy public key of local host to remote host.
 @ SETLOCAL ENABLEEXTENSIONS
+@ SET ERRORLEVEL=
 @ CALL:MAIN %*
+@ EXIT /B %ERRORLEVEL%
 @ ENDLOCAL
-@ EXIT /B
 
 : MAIN
 @ CALL:PARSE %*
@@ -19,7 +20,7 @@
 @ ssh %OPTIONS% %DESTINATION% echo^>^>%KEYS_FILE% %KEY%
 @ IF ERRORLEVEL 1 (@ ECHO>&2 error: %COPYMSG% failed) ^
   ELSE            (@ ECHO>&2 info: %COPYMSG% succeed)
-@ EXIT /B
+@ EXIT /B %ERRORLEVEL%
 
 : PARSE
 @ SET DEFAULT_ID=%USERPROFILE%\.ssh\id_rsa
@@ -50,11 +51,11 @@
 @ IF "%~1" == "" @ EXIT /B 255
 @ IF NOT "%~2" == "" @ EXIT /B 255
 @ SET DESTINATION=%~1
-@ EXIT /B
+@ EXIT /B %ERRORLEVEL%
 
 : USAGE
 @ IF DEFINED OPT @ ECHO>&2 error: invalid options at %OPT%
 @ IF NOT DEFINED OPT @ ECHO>&2 error: invalid destination
 @ SET OPTMSG=[-i identity_file] [-p port] [-o ssh_options]...
 @ ECHO>&2 usage: %~n0 %OPTMSG% [user@]hostname
-@ EXIT /B
+@ EXIT /B %ERRORLEVEL%
