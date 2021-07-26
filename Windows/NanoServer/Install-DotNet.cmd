@@ -5,9 +5,9 @@
 @ REM Initialize %Path% variable.
 @ SET SysEnvKey=HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Environment
 @ FOR /F "tokens=1,2,*" %%A IN (
-    '@ REG QUERY "%SysEnvKey%" /V "Path" ^| @ FINDSTR "Path"'
-) DO @ SET SysPath=%%C
-@ IF "%SysPath:~-1%" == ";" @ SET SysPath=%SysPath:~0,-1%
+    '@ REG QUERY "%SysEnvKey%" /V "Path" ^| FINDSTR "Path"'
+) DO @ SET "SysPath=%%C"
+@ IF "%SysPath:~-1%" == ";" @ SET "SysPath=%SysPath:~0,-1%"
 
 @ REM Get version info of .NET Core SDK.
 @ SET NETVer=%1
@@ -20,10 +20,10 @@
 @ SET NETLink=https://dotnetcli.azureedge.net/dotnet/Sdk/%NETVer%/%NETName%
 @ SET NETFile=%TEMP%\%NETName%
 @ curl -L "%NETLink%" -o "%NETFile%"
-@ SET NETPath=%ProgramFiles%\dotnet
+@ SET "NETPath=%ProgramFiles%\dotnet"
 @ MKDIR "%NETPath%"
 @ tar -xz -f "%NETFile%" -C "%NETPath%"
-@ SET SysPath=%SysPath%;%NETPath%
+@ SET "SysPath=%SysPath%;%NETPath%"
 @ SETX Path "%SysPath%" /M
 @ DEL "%NETFile%"
 
