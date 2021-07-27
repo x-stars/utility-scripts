@@ -36,8 +36,8 @@
 @ EXIT /B %ERRORLEVEL%
 
 : HEADER
-@ SET REPO=.%%CD:~%RLEN%%%
-@ CALL SET "REPO=%REPO%"
+@ SET  REPO=.%%CD:~%RLEN%%%
+@ CALL SET  "REPO=%REPO%"
 @ SET "REPO=%REPO:\=/%"
 @ SET "REPO=%REPO:./=%"
 @ %PT%=">>> "& %PT%>CON:=[35m
