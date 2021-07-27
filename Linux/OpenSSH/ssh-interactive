@@ -1,12 +1,15 @@
 #!/bin/sh
+
 test -d "$HOME/.ssh" || mkdir "$HOME/.ssh"
 KNOWN_DESTS="$HOME/.ssh/known_destinations"
 test -f "$KNOWN_DESTS" || touch "$KNOWN_DESTS"
 echo "Known destinations:" && cat "$KNOWN_DESTS"
 test -n "$SSH_OPTIONS" && echo "SSH options: $SSH_OPTIONS"
 test $# -gt 0 && echo "Command line: $*"
+
 read -r -p "Destination: " DESTINATION
 test -n "$DESTINATION" || exit 255
 grep -Fx -q "$DESTINATION" "$KNOWN_DESTS" ||
 printf "%s\n" "$DESTINATION" >> "$KNOWN_DESTS"
+
 ssh $SSH_OPTIONS $DESTINATION "$@"
