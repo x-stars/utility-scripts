@@ -1,19 +1,33 @@
 #!/bin/sh
 
+EXTMSG="exit with code %d"
 if file -b "`readlink -f /proc/$$/fd/1`" |
    grep -Fq 'character special'; then
-    FORMAT=">>> \e[35m%s\e[0m <<<\n"
+    FHEAD=">>> \e[35m%s\e[0m <<<\n"
+    FSTAT="!!! \e[31m$EXTMSG\e[0m !!!\n"
 else
-    FORMAT=">>> %s <<<\n"
+    FHEAD=">>> %s <<<\n"
+    FSTAT="!!! $EXTMSG !!!\n"
 fi
 
-find . -name .git |
+PIPE=/tmp/pipe:$$
+test -f $PIPE && rm -f $PIPE
+mkfifo $PIPE
+find . -name .git > $PIPE &
+
+ERRORS=0
 while read DGIT; do
     REPO=`dirname "$DGIT" |
           sed 's,./,,'`
     cd -- "$REPO"
-    printf "$FORMAT" "$REPO"
-    git "$@"
+    printf "$FHEAD" "$REPO"
+    git "$@" ; CODE=$?
+    ERRORS=$(($ERRORS + $CODE))
+    test $CODE = 0 ||
+    printf "$FSTAT" "$CODE"
     printf "\n"
     cd -> /dev/null
-done
+done < $PIPE
+
+test -f $PIPE && rm -f $PIPE
+exit $ERRORS
