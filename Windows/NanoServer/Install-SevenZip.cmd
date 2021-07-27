@@ -21,6 +21,6 @@
 @ DEL "%Z7File%"
 
 @ REM Verify 7-Zip CLI executable file.
-@ DIR "%Z7Path%\7za.exe" 1>NUL
+@ DIR "%Z7Path%\7za.exe" 1>NUL:
 @ EXIT /B %ERRORLEVEL%
 @ ENDLOCAL

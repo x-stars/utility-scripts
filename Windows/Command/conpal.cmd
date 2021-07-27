@@ -5,7 +5,7 @@
     @ FOR /L %%I IN (0, 1, 7) DO @ (
         @ SET /A NUM = %%T * 10 + %%I
         @ IF !NUM! LSS 100 (SET SPACE=  ) ELSE (SET SPACE= )
-        @ SET /P <NUL=[!NUM!m!SPACE!!NUM![0m
+        @ SET /P <NUL:=[!NUM!m!SPACE!!NUM![0m
     )
     @ ECHO=
 )
@@ -14,7 +14,7 @@
     @ FOR /L %%I IN (0, 1, 7) DO @ (
         @ SET /A NUM = %%T * 10 + %%I
         @ IF !NUM! LSS 100 (SET SPACE=  ) ELSE (SET SPACE= )
-        @ SET /P <NUL=[!NUM!m!SPACE!!NUM![0m
+        @ SET /P <NUL:=[!NUM!m!SPACE!!NUM![0m
     )
     @ ECHO=
 )
@@ -24,7 +24,7 @@
         @ FOR /L %%C IN (0, 1, 7) DO @ (
             @ SET /A NUM = %%R * 8 + %%C
             @ IF !NUM! LSS 10 (SET SPACE=   ) ELSE (SET SPACE=  )
-            @ SET /P <NUL=[%%T8;5;!NUM!m!SPACE!!NUM![0m
+            @ SET /P <NUL:=[%%T8;5;!NUM!m!SPACE!!NUM![0m
         )
         @ ECHO=
     )
@@ -34,7 +34,7 @@
                 @ FOR /L %%C IN (0, 1, 5) DO @ (
                     @ SET /A NUM = %%O + %%R * 6 + %%S + %%C
                     @ IF !NUM! LSS 100 (SET SPACE=  ) ELSE (SET SPACE= )
-                    @ SET /P <NUL=[%%T8;5;!NUM!m!SPACE!!NUM![0m
+                    @ SET /P <NUL:=[%%T8;5;!NUM!m!SPACE!!NUM![0m
                 )
             )
             @ ECHO=
@@ -44,7 +44,7 @@
         @ FOR /L %%C IN (0, 1, 11) DO @ (
             @ SET /A NUM = 232 + %%R * 12 + %%C
             @ IF !NUM! LSS 100 (SET SPACE=  ) ELSE (SET SPACE= )
-            @ SET /P <NUL=[%%T8;5;!NUM!m!SPACE!!NUM![0m
+            @ SET /P <NUL:=[%%T8;5;!NUM!m!SPACE!!NUM![0m
         )
         @ ECHO=
     )

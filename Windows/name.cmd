@@ -6,7 +6,7 @@
     @ CHDIR
     @ GOTO ENDLOOP_ARGS
 )
-@ SET PT=SET /P ^<NUL
+@ SET PT=SET /P ^<NUL:
 : LOOP_ARGS
 @ SET ARG=%1
 @ IF NOT DEFINED ARG @ (

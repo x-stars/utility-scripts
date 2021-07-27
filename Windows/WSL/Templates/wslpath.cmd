@@ -7,12 +7,12 @@
 
 : MAIN
 @ SET ARGS=
-@ SET PT=SET /P ^<NUL
+@ SET PT=SET /P ^<NUL:
 : LOOP_ARGS
 @ SET ARG=%1
 @ IF NOT DEFINED ARG @ GOTO ENDLOOP_ARGS
 @ ECHO:%ARG% | FINDSTR /V "[\\][\\]" ^
-             | FINDSTR "[\\]" 1>NUL
+             | FINDSTR "[\\]" 1>NUL:
 @ IF NOT ERRORLEVEL 1 @ (
     @ SET "ARG=%~1"
     @ CALL:CONVERT
@@ -29,13 +29,13 @@
 @ EXIT /B %ERRORLEVEL%
 
 : CONVERT
-@ %PT%="%ARG%" | FINDSTR "^[\\]" 1>NUL
+@ %PT%="%ARG%" | FINDSTR "^[\\]" 1>NUL:
 @ IF NOT ERRORLEVEL 1 @ (
     @ FOR /F "delims=" %%P IN (
         '@ CHDIR'
     ) DO @ SET ARG=%%~dP%ARG%
 )
-@ %PT%="%ARG%" | FINDSTR "^[a-zA-Z]:" 1>NUL
+@ %PT%="%ARG%" | FINDSTR "^[a-zA-Z]:" 1>NUL:
 @ IF NOT ERRORLEVEL 1 @ (
     @ CALL:CAPITAL
 )

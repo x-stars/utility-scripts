@@ -28,6 +28,6 @@
 @ DEL "%NETFile%"
 
 @ REM Verify .NET Core SDK executable file.
-@ DIR "%NETPath%\dotnet.exe" 1>NUL
+@ DIR "%NETPath%\dotnet.exe" 1>NUL:
 @ EXIT /B %ERRORLEVEL%
 @ ENDLOCAL
