@@ -38,8 +38,8 @@
 : HEADER
 @ SET  REPO=.%%CD:~%RLEN%%%
 @ CALL SET  "REPO=%REPO%"
+@ SET "REPO=%REPO:*.\=%"
 @ SET "REPO=%REPO:\=/%"
-@ SET "REPO=%REPO:./=%"
 @ %PT%=">>> "& %PT%>CON:=[35m
 @ SET /P <NUL:="%REPO%"
 @ %PT%>CON:=[0m& ECHO= ^<^<^<
