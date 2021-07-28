@@ -13,5 +13,5 @@
 ) ELSE @ (
     @ "%BASH%" -c "%PROG% %ARGS:"=\"%"
 )
-@ EXIST /B %ERRORLEVEL%
+@ EXIT /B %ERRORLEVEL%
 @ ENDLOCAL
