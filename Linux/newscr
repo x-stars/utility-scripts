@@ -4,7 +4,7 @@ SHELL= && HELP=
 while [ $# -gt 0 ]; do
     case "$1" in
         --) shift 1; break;;
-        -s) SHELL="$2";;
+        -s) shift 1; SHELL="$1";;
         -*) HELP=yes;;
         *)  break;;
     esac
