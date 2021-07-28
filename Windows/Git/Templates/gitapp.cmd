@@ -14,4 +14,3 @@
     @ "%BASH%" -c "%PROG% %ARGS:"=\"%"
 )
 @ EXIT /B %ERRORLEVEL%
-@ ENDLOCAL

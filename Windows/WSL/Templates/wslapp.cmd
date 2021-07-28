@@ -7,4 +7,3 @@
 ) DO @ SET ARGS=%%A
 @ wsl.exe -- %PROG% %ARGS%
 @ EXIT /B %ERRORLEVEL%
-@ ENDLOCAL

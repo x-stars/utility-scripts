@@ -7,4 +7,3 @@
     Start-Process -Verb RunAs ^
     conhost.exe '%ARGS%'
 @ EXIT /B %ERRORLEVEL%
-@ ENDLOCAL

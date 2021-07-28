@@ -32,4 +32,3 @@
 @ REM Verify PowerShell Core executable file.
 @ DIR "%PSPath%\pwsh.exe" 1>NUL:
 @ EXIT /B %ERRORLEVEL%
-@ ENDLOCAL
