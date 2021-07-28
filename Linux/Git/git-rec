@@ -10,8 +10,8 @@ else
     FSTAT="!!! $EXTMSG !!!\n"
 fi
 
-PIPE=/tmp/pipe:$$
-test -f $PIPE && rm -f $PIPE
+PIPE=/tmp/fgit-$$.pipe
+test -p $PIPE && rm -f $PIPE
 mkfifo $PIPE
 find . -name .git > $PIPE &
 
@@ -29,5 +29,5 @@ while read DGIT; do
     cd -> /dev/null
 done < $PIPE
 
-test -f $PIPE && rm -f $PIPE
+test -p $PIPE && rm -f $PIPE
 exit $ERRORS

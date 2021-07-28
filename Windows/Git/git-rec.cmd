@@ -48,7 +48,7 @@
 @ SET EXITCODE=%ERRORLEVEL%
 @ SET /A TOTALERROR += %EXITCODE%
 @ IF %EXITCODE% == 0 @ EXIT /B 0
-@ %PT%>&2=!!! & %PT%>CON:=[31m
+@ %PT%>&2=!!! & %PT%>CON:=[33m
 @ %PT%>&2=exit with code %EXITCODE%
 @ %PT%>CON:=[0m& ECHO>&2= !!!
 @ EXIT /B %ERRORLEVEL%
