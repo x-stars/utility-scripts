@@ -113,6 +113,7 @@ alias l='ls -CF'
 
 # Add an "alert" alias for long running commands.  Use like so:
 #   sleep 10; alert
+alias bell='(printf "\a" > `tty`)'
 alias alert='notify-send \
     --urgency=low \
     -i "$([ $? = 0 ] && echo terminal || echo error)" \
