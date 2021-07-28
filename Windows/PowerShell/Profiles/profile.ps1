@@ -12,6 +12,7 @@ Set-Variable -Option ReadOnly -Force `
     PathSep $([System.IO.Path]::PathSeparator)
 
 # 设定自定义命令别名。
+function mklink { cmd.exe /c mklink @args }
 Set-Alias -Force eval Invoke-Expression
 Set-Alias -Force new New-Object
 Set-Alias -Force out Out-File
