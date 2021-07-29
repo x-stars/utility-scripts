@@ -1,14 +1,10 @@
 #!/bin/sh
 
 EXTMSG="exit with code %d"
-if file -b "`readlink -f /proc/$$/fd/1`" |
-   grep -Fq 'character special'; then
+test ! -t 1 && FHEAD=">>> %s <<<\n" ||
     FHEAD=">>> \e[35m%s\e[0m <<<\n"
-    FSTAT="!!! \e[31m$EXTMSG\e[0m !!!\n"
-else
-    FHEAD=">>> %s <<<\n"
-    FSTAT="!!! $EXTMSG !!!\n"
-fi
+test ! -t 2 && FSTAT="!!! $EXTMSG !!!\n" ||
+    FSTAT="!!! \e[33m$EXTMSG\e[0m !!!\n"
 
 PIPE=/tmp/fgit-$$.pipe
 test -p $PIPE && rm -f $PIPE
@@ -16,15 +12,16 @@ mkfifo $PIPE
 find . -name .git > $PIPE &
 
 ERRORS=0
-while read DGIT; do
+while read -r DGIT; do
     REPO=`dirname "$DGIT" |
           sed 's,./,,'`
     cd -- "$REPO"
     printf "$FHEAD" "$REPO"
     git "$@" ; CODE=$?
-    ERRORS=$(($ERRORS + $CODE))
-    test $CODE = 0 ||
-    printf "$FSTAT" "$CODE"
+    if [ $CODE -ne 0 ]; then
+        ERRORS=$(($ERRORS + 1))
+        printf "$FSTAT" $CODE >&2
+    fi
     printf "\n"
     cd -> /dev/null
 done < $PIPE
