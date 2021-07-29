@@ -1,4 +1,6 @@
 @ REM Command Prompt startup commands.
+@ ECHO "%CMDCMDLINE:"=%" | FIND /I "/C" 1>NUL:
+@ IF NOT ERRORLEVEL 1 @ EXIT /B 0
 
 @ REM Set command macros.
 @ SET AUTORUN=%~f0

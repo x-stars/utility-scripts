@@ -3,6 +3,11 @@
 当前用户的 PowerShell 配置文件。
 #>
 
+# 仅交互模式加载配置。
+$PSInteractive = -not $([System.Environment]::GetCommandLineArgs() |
+    Where-Object { ($_ -ilike '*.ps1') -or ($_ -ieq '-Command') })
+if (-not $PSInteractive) { return }
+
 # 设定自定义全局变量。
 Set-Variable -Option ReadOnly -Force `
     NewLine $([System.Environment]::NewLine)
