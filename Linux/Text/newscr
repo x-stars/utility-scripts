@@ -13,8 +13,8 @@ done
 test -n "$SHELL" || SHELL=/bin/sh
 
 if [ $# -eq 0 ] || [ -n "$HELP" ]; then
-    NAME=`basename "$0"`
-    echo>&2 "Usage: $NAME [-s SHELL] FILE..."
+    CMDNAME=`basename "$0"`
+    echo>&2 "Usage: $CMDNAME [-s SHELL] FILE..."
     echo>&2 'Create scripts with specific interpreter.'
     echo>&2 'Options:'
     echo>&2 '    -s: interpreter path of new scripts.'

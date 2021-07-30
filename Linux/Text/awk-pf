@@ -1,23 +1,23 @@
 #!/bin/sh
 
-OPTS= && FLDS= && HELP=
+OPTIONS= && FIELDS= && HELP=
 while [ $# -gt 0 ]; do
     case "$1" in
         --) shift 1; break;;
         -h|--help)HELP=yes;;
-        -*) OPTS="$OPTS $1";;
-        *)  FLDS="$FLDS \$$1";;
+        -*) OPTIONS="$OPTIONS $1";;
+        *)  FIELDS="$FIELDS \$$1";;
     esac
     shift 1
 done
 
-if [ -z "$FLDS" ] || [ -n "$HELP" ]; then
-    NAME=`basename "$0"`
-    ARGS='[OPTION]... FIELD... [-- FILE...]'
-    echo>&2 "Usage: $NAME $ARGS"
+if [ -z "$FIELDS" ] || [ -n "$HELP" ]; then
+    CMDNAME=`basename "$0"`
+    ARGNAME='[OPTION]... FIELD... [-- FILE...]'
+    echo>&2 "Usage: $CMDNAME $ARGNAME"
     echo>&2 'Print specific fields of inputs.'
     echo>&2 'Options are the same as the awk.'
     exit 255
 fi
 
-awk $OPTS "{ print $FLDS }" "$@"
+awk $OPTIONS "{ print $FIELDS }" "$@"
