@@ -19,7 +19,7 @@
 
 : TEMPFILE
 @ REM Output to temporary file with exit code.
-@ SET OUTFILE=%TEMP%\SETAS-%VARNAME%#%RANDOM%.txt
+@ SET "OUTFILE=%TEMP%\SETAS-%VARNAME%#%RANDOM%.txt"
 @ (%COMMAND%)>"%OUTFILE%" & CALL SET EXITCODE=%%ERRORLEVEL%%
 @ ENDLOCAL & SET "%VARNAME%=" & SET "%VARNAME%#0=0" & (
     @ FOR /F "usebackq tokens=1,* delims=:" %%L IN (
@@ -38,13 +38,13 @@
     A B C D E F G H I J K L M N O P Q R S T U V W X Y Z
 ) DO @ CALL SET "CMDNAME=%%CMDNAME:%%L=%%L%%"
 @ ECHO=Sets a variable value as output of a command.
-@ ECHO=& %PT%="%CMDNAME%"& EHO= variable="command"& ECHO=
+@ ECHO=& %PT%="%CMDNAME%"& ECHO= variable="command"& ECHO=
 @ ECHO=  variable  Specifies the variable name to set.
 @ ECHO=  command   Specifies the command to execute.
 @ ECHO=& ECHO=If variable %%SETASERR%% is set to any value,
 @ %PT%="%CMDNAME%"& ECHO= will set ERRORLEVEL of the command.
 @ ECHO=NOTE: This will slow down the command execution.
-@ ECHO=& ECHO=These variables will also set:& ECHO=
+@ ECHO=& ECHO=These variables will be also set:& ECHO=
 @ ECHO=  variable#0  Represents the lines of output.
 @ ECHO=  variable#n  Represents the n-th line of output.
 @ EXIT /B %ERRORLEVEL%
