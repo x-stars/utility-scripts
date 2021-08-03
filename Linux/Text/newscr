@@ -6,23 +6,26 @@ while [ $# -gt 0 ]; do
         --) shift 1; break;;
         -s) shift 1; SHELL="$1";;
         -*) HELP=yes;;
-        *)  break;;
+         *) break;;
     esac
     shift 1
 done
-test -n "$SHELL" || SHELL=/bin/sh
+[ -n "$SHELL" ] || SHELL=/bin/sh
 
-if [ $# -eq 0 ] || [ -n "$HELP" ]; then
+usage ()
+{
     CMDNAME=`basename "$0"`
-    echo>&2 "Usage: $CMDNAME [-s SHELL] FILE..."
-    echo>&2 'Create scripts with specific interpreter.'
-    echo>&2 'Options:'
-    echo>&2 '    -s: interpreter path of new scripts.'
-    echo>&2 '        default value: /bin/sh'
-    echo>&2 'Variables:'
-    echo>&2 '    $EDITOR: script editor path or name.'
-    exit 255
-fi
+    echo "Usage: $CMDNAME [-s SHELL] FILE..."
+    echo 'Create scripts with specific interpreter.'
+    echo 'Options:'
+    echo '    -s: interpreter path of new scripts.'
+    echo '        default value: /bin/sh'
+    echo 'Variables:'
+    echo '    $EDITOR: script editor path or name.'
+}
+
+[ -n "$HELP" ] && usage && exit 0
+[ $# -eq 0 ] && usage>&2 && exit 1
 
 set -o noclobber
 for FILE in "$@"; do
@@ -30,6 +33,6 @@ for FILE in "$@"; do
 done
 chmod +x "$@"
 
-if [ -x "$EDITOR" ]; then
+if [ -n "$EDITOR" ]; then
     "$EDITOR" "$@"
 fi

@@ -7,24 +7,28 @@ while [ $# -gt 0 ]; do
         --) shift 1; break;;
         -r) SEDOPTS="$1";;
         -*) HELP=yes;;
-        *)  break;;
+         *) break;;
     esac
     shift 1
 done
-test -n "$EXPR" || EXPR='s:$:~:g'
+[ -n "$SEDEXPR" ] || SEDEXPR='s:$:~:g'
 
-if [ $# -eq 0 ] || [ -n "$HELP" ]; then
+usage ()
+{
     CMDNAME=`basename "$0"`
-    echo>&2 "Usage: $CMDNAME [-r] [FROM:TO]... FILE..."
-    echo>&2 'Duplicate and rename files by FROM:TO exprs.'
-    echo>&2 'FROM:TO exprs use regexp; default value: $:~'
-    echo>&2 'Options:'
-    echo>&2 '    -r: using extended regular expressions.'
-fi
+    echo "Usage: $CMDNAME [-r] [FROM:TO]... FILE..."
+    echo 'Duplicate and rename files by FROM:TO exprs.'
+    echo 'FROM:TO exprs use regexp; default value: $:~'
+    echo 'Options:'
+    echo '    -r: using extended regular expressions.'
+}
+
+[ -n "$HELP" ] && usage && exit 0
+[ $# -eq 0 ] && usage>&2 && exit 1
 
 for FILE in "$@"; do
     BASEDIR=`dirname "$FILE"`
     DUPNAME=`basename "$FILE" |
-         sed $SEDOPTS "$SEDEXPR"`
+             sed $SEDOPTS "$SEDEXPR"`
     cp -r "$FILE" "$BASEDIR/$DUPNAME"
 done
