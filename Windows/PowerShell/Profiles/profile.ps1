@@ -12,17 +12,21 @@ Set-Variable -Option ReadOnly -Force `
     PathSep $([System.IO.Path]::PathSeparator)
 
 # 设定自定义命令别名。
-function bell   { Write-Host "`a" -NoNewline }
-function mklink { cmd.exe /c mklink @args }
 Set-Alias -Force eval Invoke-Expression
 Set-Alias -Force new New-Object
 Set-Alias -Force out Out-File
 
+# 设定自定义简单命令。
+function bell { Write-Host "`a" -NoNewline }
+function mklink { cmd.exe /c mklink @args }
+
 # 定义命令提示的配置。
+function Write-PromptStatus { }
 function prompt
 {
     $Status = $?
-    $StatusText = if ($Status) { '(○)' } else { '(×)' }
+    [System.Environment]::CurrentDirectory = $PWD.Path
+    $StatusText = if ($Status) { '(○PS)' } else { '(×PS)' }
     $StatusColor = if ($Status) { 'Green' } else { 'Red' }
     [System.Console]::ResetColor()
     Write-Host $StatusText -ForegroundColor $StatusColor -NoNewline
@@ -33,13 +37,14 @@ function prompt
     Write-Host $env:COMPUTERNAME -ForegroundColor Magenta -NoNewline
     Write-Host ' ' -NoNewline
     Write-Host $PWD.Path -ForegroundColor Yellow -NoNewline
-    Write-Host
+    [System.Console]::ResetColor()
+    Write-Host $($(Write-PromptStatus) -join ' ')
     [System.Console]::ResetColor()
     Write-Output '> '
 }
 Set-PSReadLineOption -PromptText '> '
 
-# 设置内置变量配置。
+# 设定内置变量配置。
 Set-Variable OutputEncoding $([System.Text.Encoding]::UTF8)
 
 # 导入脚本文件目录。
