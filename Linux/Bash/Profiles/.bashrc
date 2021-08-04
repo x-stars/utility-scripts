@@ -27,6 +27,11 @@ shopt -s checkwinsize
 # match all files and zero or more directories and subdirectories.
 shopt -s globstar
 
+# set shell execute cd command when only directory given.
+shopt -s autocd
+# set shell working directory never follow symbolic links.
+set +o physical
+
 # make less more friendly for non-text input files, see lesspipe(1)
 [ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
 
@@ -56,21 +61,19 @@ if [ -n "$force_color_prompt" ]; then
     fi
 fi
 
-SHNAME=$(basename "$(readlink /proc/$$/exe)" |
-         tr '[:lower:]' '[:upper:]')
 chroot_prompt="${debian_chroot:+($debian_chroot)}"
 if [ "$color_prompt" = yes ]; then
     prtnst () { [ $? -eq 0 ] &&
-        printf "\e[92m(\u25CB%s)\e[0m" "$SHNAME" ||
-        printf "\e[91m(\u00D7%s)\e[0m" "$SHNAME"; }
-    PS1="\[\e[00m\]"'`prtnst`'"\[\e[00m\][\A] "
+        printf "\e[92m(\u25CB%s)\e[0m\n" "$*" ||
+        printf "\e[91m(\u00D7%s)\e[0m\n" "$*"; }
+    PS1="\[\e[00m\]"'`prtnst BASH`'"\[\e[00m\][\A] "
     PS1="$PS1$chroot_prompt\[\e[96m\]\u\[\e[00m\]@\[\e[95m\]\h "
     PS1="$PS1\[\e[01;34m\]\w\[\e[00m\]\n\[\e[01m\]\$\[\e[00m\] "
 else
     prtnst () { [ $? -eq 0 ] &&
-        printf "(\u25CB%s)" "$SHNAME" ||
-        printf "(\u00D7%s)" "$SHNAME"; }
-    PS1='`prtnst`'"[\A] $chroot_prompt\u@\h \w\n\$ "
+        printf "(\u25CB%s)\n" "$*" ||
+        printf "(\u00D7%s)\n" "$*"; }
+    PS1='`prtnst BASH`'"[\A] $chroot_prompt\u@\h \w\n\$ "
 fi
 
 unset color_prompt force_color_prompt chroot_prompt
