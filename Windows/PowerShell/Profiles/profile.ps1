@@ -25,9 +25,14 @@ function Write-PromptStatus { }
 function prompt
 {
     $Status = $?
-    [System.Environment]::CurrentDirectory = $PWD.Path
+    $CurrentDirectory = $PWD.Path
     $StatusText = if ($Status) { '(○PS)' } else { '(×PS)' }
     $StatusColor = if ($Status) { 'Green' } else { 'Red' }
+    if ($PWD.Provider.Name -eq 'FileSystem')
+    {
+        $CurrentDirectory = $PWD.ProviderPath
+        [System.Environment]::CurrentDirectory = $CurrentDirectory
+    }
     [System.Console]::ResetColor()
     Write-Host $StatusText -ForegroundColor $StatusColor -NoNewline
     Write-Host "[$(Get-Date -UFormat %R)]" -NoNewline
@@ -36,7 +41,7 @@ function prompt
     Write-Host '@' -NoNewline
     Write-Host $env:COMPUTERNAME -ForegroundColor Magenta -NoNewline
     Write-Host ' ' -NoNewline
-    Write-Host $PWD.Path -ForegroundColor Yellow -NoNewline
+    Write-Host $CurrentDirectory -ForegroundColor Yellow -NoNewline
     [System.Console]::ResetColor()
     Write-Host $($(Write-PromptStatus) -join ' ')
     [System.Console]::ResetColor()
