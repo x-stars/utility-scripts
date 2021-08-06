@@ -20,39 +20,36 @@ Set-Alias -Force out Out-File
 function bell { Write-Host "`a" -NoNewline }
 function mklink { cmd.exe /c mklink @args }
 
-# 定义命令提示的配置。
+# 设定内置变量配置项。
+Set-Variable OutputEncoding $([System.Text.Encoding]::UTF8)
+
+# 定义命令提示符配置。
 function Write-PromptStatus { }
 function prompt
 {
-    $Status = $?
-    $CurrentDirectory = $PWD.Path
+    $Status = $?                 #0x25CB          #0x00D7
     $StatusText = if ($Status) { '(○PS)' } else { '(×PS)' }
     $StatusColor = if ($Status) { 'Green' } else { 'Red' }
-    if ($PWD.Provider.Name -eq 'FileSystem')
-    {
-        $CurrentDirectory = $PWD.ProviderPath
-        [System.Environment]::CurrentDirectory = $CurrentDirectory
-    }
+    $CurrentDirectory = $PWD.Path
+    if ($PWD.Provider.Name -eq 'FileSystem') {
+        [System.Environment]::CurrentDirectory =
+            $CurrentDirectory = $PWD.ProviderPath }
     [System.Console]::ResetColor()
     Write-Host $StatusText -ForegroundColor $StatusColor -NoNewline
-    Write-Host "[$(Get-Date -UFormat %R)]" -NoNewline
+    Write-Host "[$(Get-Date -Format HH:mm)]" -NoNewline
     Write-Host ' ' -NoNewline
     Write-Host $env:USERNAME -ForegroundColor Cyan -NoNewline
     Write-Host '@' -NoNewline
     Write-Host $env:COMPUTERNAME -ForegroundColor Magenta -NoNewline
     Write-Host ' ' -NoNewline
     Write-Host $CurrentDirectory -ForegroundColor Yellow -NoNewline
-    [System.Console]::ResetColor()
     Write-Host $($(Write-PromptStatus) -join ' ')
     [System.Console]::ResetColor()
     Write-Output '> '
 }
 Set-PSReadLineOption -PromptText '> '
 
-# 设定内置变量配置。
-Set-Variable OutputEncoding $([System.Text.Encoding]::UTF8)
-
-# 导入脚本文件目录。
+# 导入用户脚本目录。
 if (Test-Path $(Join-Path $(Split-Path $PROFILE -Parent) 'Scripts'))
 {
     $env:Path += $PathSep + $(Join-Path $(Split-Path $PROFILE -Parent) 'Scripts')
