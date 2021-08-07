@@ -27,6 +27,8 @@ Set-Alias -Force out Out-File
 # 设定自定义简单命令。
 function bell { Write-Host "`a" -NoNewline }
 function mklink { cmd.exe /c mklink @args }
+function time { $cmds = [scriptblock]::Create($args);
+    $time = $(Get-Date); & $cmds; $(Get-Date) - $time }
 
 # 设定内置变量配置项。
 Set-Variable OutputEncoding $([System.Text.Encoding]::UTF8)
