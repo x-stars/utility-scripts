@@ -3,6 +3,14 @@
 当前用户的 PowerShell 配置文件。
 #>
 
+# 仅交互模式加载配置。
+& {
+    $CommandLineArgs = [System.Environment]::GetCommandLineArgs()
+    if ($($CommandLineArgs -inotcontains '-NoProfile') -and
+        $($CommandLineArgs -imatch '(-Command|-File|.*\.ps1)') -and
+        $($CommandLineArgs -inotcontains '-NoExit')) { exit }
+}
+
 # 设定自定义全局变量。
 Set-Variable -Option ReadOnly -Force `
     NewLine $([System.Environment]::NewLine)
