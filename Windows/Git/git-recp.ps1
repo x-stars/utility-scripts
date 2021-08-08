@@ -1,6 +1,6 @@
 # Invoke Git command recursively in parallel jobs.
 $GitArguments = $args
-$RootDirectory = $(Get-Location).Path
+$RootDirectory = $(Get-Location).ProviderPath
 Get-ChildItem -Directory -Force -Recurse |
 Where-Object Name -EQ .git | ForEach-Object `
 {
