@@ -17,7 +17,7 @@ Where-Object Name -EQ .git | ForEach-Object `
         [PSCustomObject]@{
             Repository = $Repository; GitOutput = [string[]]$GitOutput
             GitError = [string[]]$GitError; ExitCode = $LASTEXITCODE
-        }
+        }#[PSCustomObject]
     }
 } |
 Receive-Job -Wait -AutoRemoveJob | ForEach-Object `

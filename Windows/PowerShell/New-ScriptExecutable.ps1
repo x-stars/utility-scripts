@@ -88,7 +88,8 @@ param
 begin
 {
     # PowerShell 脚本宿主的 C# 源代码。
-    $scriptHostCode = <#lang=csharp#>@'
+    $scriptHostCode =
+<#lang=csharp#>@'
 using System;
 using System.Diagnostics;
 using System.IO;
@@ -217,7 +218,8 @@ namespace XstarS.PowerShell.ScriptHost
         }
     }
 }
-'@
+'@<#lang=csharp#>
+
     # 定义编译器常量。
     $scriptHostDefines = @('TRACE')
     if ($NoExit) { $scriptHostDefines += 'NOEXIT' }
