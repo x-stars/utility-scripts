@@ -38,16 +38,9 @@
     https://www.pstips.net/convert-ps1toexe.html
 #>
 
-using namespace System
-using namespace System.CodeDom.Compiler
-using namespace System.Diagnostics
-using namespace System.IO
-using namespace System.Management.Automation
-using namespace Microsoft.CSharp
-
 [CmdletBinding()]
 [Alias('nse')]
-[OutputType([FileInfo[]])]
+[OutputType([System.IO.FileInfo[]])]
 param
 (
     [Parameter(
@@ -251,7 +244,7 @@ process
             { $(New-Item -Path $executablePath -Force) }
 
         # 设定 C# 编译器的参数。
-        $compilerParam = [CompilerParameters]::new()
+        $compilerParam = [System.CodeDom.Compiler.CompilerParameters]::new()
         $compilerParam.GenerateExecutable = $true
         $compilerParam.CompilerOptions = "/optimize /define:$scriptHostDefines"
         # 设定编译器输出可执行文件的路径。
@@ -266,10 +259,11 @@ process
             Write-Verbose "    $($referenceFile.Name)"
         }
         # 添加对 System 程序集的引用。
-        $compilerParam.ReferencedAssemblies.Add([Process].Assembly.Location) > $null
+        $extraAssembly = [System.Diagnostics.Process].Assembly;
+        $compilerParam.ReferencedAssemblies.Add($extraAssembly.Location) > $null
 
         # 编译程序集，输出为可执行文件。
-        $codeCompiler = [CSharpCodeProvider]::new()
+        $codeCompiler = [Microsoft.CSharp.CSharpCodeProvider]::new()
         $compileResult = $codeCompiler.CompileAssemblyFromSource($compilerParam, $scriptHostCode)
         if ($compileResult.Errors.HasErrors)
         {
