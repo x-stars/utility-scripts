@@ -1,4 +1,6 @@
+#.SYNOPSIS
 # Get Git commit statistics grouped by authors.
+
 git log --format=%aN | Sort-Object -Unique | ForEach-Object `
 {
     $Add = 0; $Remove = 0

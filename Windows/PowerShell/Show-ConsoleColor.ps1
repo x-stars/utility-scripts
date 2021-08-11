@@ -1,7 +1,5 @@
-﻿<#
-.SYNOPSIS
-显示控制台颜色设置。
-#>
+﻿#.SYNOPSIS
+# 显示控制台颜色设置。
 
 $DarkColors = @(
     "Black", "DarkBlue", "DarkGreen", "DarkCyan",

@@ -1,7 +1,5 @@
-<#
-.SYNOPSIS
-提供以脚本文件为基础的 PowerShell 模块定义的模板。
-#>
+﻿#.SYNOPSIS
+# 提供以脚本文件为基础的 PowerShell 模块定义的模板。
 
 Get-ChildItem $PSScriptRoot '*.ps1' -File | ForEach-Object `
 {
