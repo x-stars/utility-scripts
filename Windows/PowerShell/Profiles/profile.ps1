@@ -34,7 +34,6 @@ function time { $cmd = [scriptblock]::Create($args);
 Set-Variable OutputEncoding $([System.Text.Encoding]::UTF8)
 
 # 定义命令提示符配置。
-function Write-PromptStatus { }
 function prompt
 {
     $Status = $?                 #0x25CB          #0x00D7
@@ -55,8 +54,9 @@ function prompt
     Write-Host $CurrentDirectory -ForegroundColor Yellow -NoNewline
     Write-Host $($(Write-PromptStatus) -join ' ')
     [System.Console]::ResetColor()
-    Write-Output '> '
+    Write-Output $(Get-PSReadLineOption).PromptText
 }
+function Write-PromptStatus { }
 Set-PSReadLineOption -PromptText '> '
 
 # 导入用户脚本目录。
