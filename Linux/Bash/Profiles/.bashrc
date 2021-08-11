@@ -67,7 +67,7 @@ if [ "$color_prompt" = yes ]; then
         printf "\e[92m(\u25CB%s)\e[0m\n" "$*" ||
         printf "\e[91m(\u00D7%s)\e[0m\n" "$*"; }
     PS1="\[\e[00m\]"'`prtnst BASH`'"\[\e[00m\][\A] "
-    PS1="$PS1$chroot_prompt\[\e[96m\]\u\[\e[00m\]@\[\e[95m\]\h "
+    PS1="$PS1$chroot_prompt\[\e[36m\]\u\[\e[00m\]@\[\e[35m\]\h "
     PS1="$PS1\[\e[01;34m\]\w\[\e[00m\]\n\[\e[01m\]\$\[\e[00m\] "
 else
     prtnst () { [ $? -eq 0 ] &&
