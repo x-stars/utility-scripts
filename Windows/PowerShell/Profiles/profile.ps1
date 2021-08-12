@@ -1,37 +1,30 @@
 ﻿#.SYNOPSIS
 # 当前用户的 PowerShell 配置文件。
 
-# 仅交互模式加载配置。
+# 仅交互模式下配置。
 & {
     $CommandLineArgs = [System.Environment]::GetCommandLineArgs()
-    if ($($CommandLineArgs -inotcontains '-NoProfile') -and
+    if ($($CommandLineArgs[0] -inotlike '*PowerShell_ISE*') -and
+        $($CommandLineArgs -inotcontains '-NoProfile') -and
         $($CommandLineArgs -imatch '(-Command|-File|.*\.ps1)') -and
         $($CommandLineArgs -inotcontains '-NoExit')) { exit }
 }#&
 
-# 设定自定义全局变量。
-Set-Variable -Option ReadOnly -Force `
-    NewLine $([System.Environment]::NewLine)
-Set-Variable -Option ReadOnly -Force `
-    DirSep $([System.IO.Path]::DirectorySeparatorChar)
-Set-Variable -Option ReadOnly -Force `
-    PathSep $([System.IO.Path]::PathSeparator)
-
-# 设定自定义命令别名。
+# 定义内置命令别名。
 Set-Alias -Force eval Invoke-Expression
 Set-Alias -Force new New-Object
 Set-Alias -Force out Out-File
 
-# 设定自定义简单命令。
+# 定义简单用户命令。
 function bell { Write-Host "`a" -NoNewline }
 function mklink { cmd.exe /c mklink @args }
 function time { $cmd = [scriptblock]::Create($args);
     $time = $(Get-Date); & $cmd; $(Get-Date) - $time }
 
-# 设定内置变量配置项。
+# 设定内置配置变量。
 Set-Variable OutputEncoding $([System.Text.Encoding]::UTF8)
 
-# 定义命令提示符配置。
+# 定义命令提示配置。
 function prompt
 {
     $Status = $?                 #0x25CB          #0x00D7
@@ -60,7 +53,8 @@ Set-PSReadLineOption -PromptText '> '
 # 导入用户脚本目录。
 if (Test-Path $(Join-Path $(Split-Path $PROFILE -Parent) 'Scripts'))
 {
-    $env:Path += $PathSep + $(Join-Path $(Split-Path $PROFILE -Parent) 'Scripts')
+    $env:Path += [System.IO.Path]::PathSeparator +
+        $(Join-Path $(Split-Path $PROFILE -Parent) 'Scripts')
 }
 
 # 导入当前用户模块。
