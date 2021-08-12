@@ -3,8 +3,7 @@
 
 $GitArguments = $args
 $RootDirectory = $(Get-Location).ProviderPath
-Get-ChildItem -Directory -Force -Recurse |
-Where-Object Name -EQ .git | ForEach-Object `
+Get-ChildItem -Filter .git -Directory -Force -Recurse | ForEach-Object `
 {
     $RepositoryPath = $(Split-Path $_.FullName -Parent)
     Start-Job -ArgumentList @($RootDirectory, $RepositoryPath, $GitArguments) `
