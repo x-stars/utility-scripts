@@ -1,9 +1,10 @@
 ﻿#.SYNOPSIS
-# 提供以脚本文件为基础的 PowerShell 模块定义的模板。
+# 定义以 PowerShell 脚本文件组成的 PowerShell 模块。
 
 Get-ChildItem $PSScriptRoot '*.ps1' -File | ForEach-Object `
 {
     $FunctionName = $_.BaseName
+    $FunctionPath = $(Join-Path Function: $FunctionName)
     $ScriptContent = $(Get-Content $_.FullName -Raw)
     $HelpForward = ".FORWARDHELPTARGETNAME $($_.FullName)"
     $CommentHelp = @('<#', $HelpForward, '#>')
@@ -18,7 +19,7 @@ Get-ChildItem $PSScriptRoot '*.ps1' -File | ForEach-Object `
     $FunctionBody = $ParamBlock + @('') + $ProcessBlock
     $FunctionContent = $FunctionHead + @('') + $FunctionBody
     $FunctionContent = $($FunctionContent | Out-String)
-    Set-Content Function:\$FunctionName $FunctionContent
+    Set-Content $FunctionPath $FunctionContent
     $ScriptAst.ParamBlock.Attributes |
     Where-Object { [string]$_.TypeName -ieq 'Alias' } |
     ForEach-Object { $_.PositionalArguments.Value } |
