@@ -2,13 +2,11 @@
 # 当前用户的 PowerShell 配置文件。
 
 # 仅交互模式下配置。
-& {
-    $CommandLineArgs = [System.Environment]::GetCommandLineArgs()
-    if ($($CommandLineArgs[0] -inotlike '*PowerShell_ISE*') -and
-        $($CommandLineArgs -inotcontains '-NoProfile') -and
-        $($CommandLineArgs -imatch '(-Command|-File|.*\.ps1)') -and
-        $($CommandLineArgs -inotcontains '-NoExit')) { exit }
-}#&
+$PSCmdLineArgs = [System.Environment]::GetCommandLineArgs()
+if ($($PSCmdLineArgs[0] -inotlike '*PowerShell_ISE*') -and
+    $($PSCmdLineArgs -inotcontains '-NoProfile') -and
+    $($PSCmdLineArgs -imatch '(-Command|-File|.*\.ps1)') -and
+    $($PSCmdLineArgs -inotcontains '-NoExit')) { exit }
 
 # 定义内置命令别名。
 Set-Alias -Force eval Invoke-Expression
@@ -22,7 +20,10 @@ function time { $cmd = [scriptblock]::Create($args);
     $time = $(Get-Date); & $cmd; $(Get-Date) - $time }
 
 # 设定内置配置变量。
-Set-Variable OutputEncoding $([System.Text.Encoding]::UTF8)
+$PSDefaultParameterValues['*:Encoding'] = 'UTF8'
+$OutputEncoding = [System.Text.UTF8Encoding]::new($false)
+[System.Console]::InputEncoding = $OutputEncoding
+[System.Console]::OutputEncoding = $OutputEncoding
 
 # 定义命令提示配置。
 function prompt
