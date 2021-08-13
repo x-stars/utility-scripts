@@ -8,6 +8,12 @@ if ($($PSCmdLineArgs[0] -inotlike '*PowerShell_ISE*') -and
     $($PSCmdLineArgs -imatch '(-Command|-File|.*\.ps1)') -and
     $($PSCmdLineArgs -inotcontains '-NoExit')) { exit }
 
+# 设定内置配置变量。
+$PSDefaultParameterValues['*:Encoding'] = 'UTF8'
+$OutputEncoding = [System.Text.UTF8Encoding]::new($false)
+[System.Console]::InputEncoding = $OutputEncoding
+[System.Console]::OutputEncoding = $OutputEncoding
+
 # 定义内置命令别名。
 Set-Alias -Force eval Invoke-Expression
 Set-Alias -Force new New-Object
@@ -18,12 +24,6 @@ function bell { Write-Host "`a" -NoNewline }
 function mklink { cmd.exe /c mklink @args }
 function time { $cmd = [scriptblock]::Create($args);
     $time = $(Get-Date); & $cmd; $(Get-Date) - $time }
-
-# 设定内置配置变量。
-$PSDefaultParameterValues['*:Encoding'] = 'UTF8'
-$OutputEncoding = [System.Text.UTF8Encoding]::new($false)
-[System.Console]::InputEncoding = $OutputEncoding
-[System.Console]::OutputEncoding = $OutputEncoding
 
 # 定义命令提示配置。
 function prompt
@@ -61,6 +61,7 @@ if (Test-Path $(Join-Path $(Split-Path $PROFILE -Parent) 'Scripts'))
 # 导入当前用户模块。
 if (Test-Path $(Join-Path $(Split-Path $PROFILE -Parent) 'Modules'))
 {
-    Get-ChildItem $(Join-Path $(Split-Path $PROFILE -Parent) 'Modules') -Directory |
-    ForEach-Object Name | Import-Module -ErrorAction SilentlyContinue
+    Join-Path $(Split-Path $PROFILE -Parent) 'Modules' |
+    Get-ChildItem -Directory | ForEach-Object Name |
+    Import-Module -ErrorAction SilentlyContinue
 }
