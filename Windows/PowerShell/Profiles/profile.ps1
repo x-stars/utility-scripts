@@ -11,8 +11,8 @@ if ($($PSCmdLineArgs[0] -inotlike '*PowerShell_ISE*') -and
 # 设定内置配置变量。
 $PSDefaultParameterValues['*:Encoding'] = 'UTF8'
 $OutputEncoding = [System.Text.UTF8Encoding]::new($false)
-[System.Console]::InputEncoding = $OutputEncoding
-[System.Console]::OutputEncoding = $OutputEncoding
+try { [System.Console]::InputEncoding = $OutputEncoding } catch { }
+try { [System.Console]::OutputEncoding = $OutputEncoding } catch { }
 
 # 定义内置命令别名。
 Set-Alias -Force eval Invoke-Expression
