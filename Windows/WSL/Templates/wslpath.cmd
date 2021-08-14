@@ -40,6 +40,7 @@
 )
 @ SET "ARG=%ARG:\=/%"
 @ SET "ARG=%ARG:`=\`%"
+@ SET "ARG=%ARG:$=\$%"
 @ SET  ARG="%ARG%"
 @ EXIT /B %ERRORLEVEL%
 
