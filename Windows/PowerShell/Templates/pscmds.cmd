@@ -4,7 +4,7 @@
 @ SET "PSCMDPATH=%~f0"
 @ SET "PT=SET /P <NUL:" & SET "NL=ECHO="
 @ SET "ERRORLEVEL=" & (
-    %PT%="$PSCmdCommandPath = '%PSCMDPATH:'=''%'"&%NL%
+    %PT%="$PSCmdCommandPath = $env:PSCMDPATH"&%NL%
     %PT%="$PSCmdScriptRoot = $(Split-Path $PSCmdCommandPath -Parent)"&%NL%
     %PT%="$PSDefaultParameterValues['*:Encoding'] = 'UTF8'"&%NL%
     %PT%="$OutputEncoding = [System.Text.UTF8Encoding]::new($false)"&%NL%
