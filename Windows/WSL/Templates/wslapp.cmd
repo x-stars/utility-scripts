@@ -5,5 +5,5 @@
 @ FOR /F "delims=" %%A IN (
     '@ WSLPath.cmd %*'
 ) DO @ SET ARGS=%%A
-@ wsl.exe -- %PROG% %ARGS%
+@ wsl.exe --exec %PROG% %ARGS%
 @ EXIT /B %ERRORLEVEL%
