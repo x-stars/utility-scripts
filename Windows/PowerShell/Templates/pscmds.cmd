@@ -1,6 +1,8 @@
 @ REM Invoke PowerShell commands below : POWERSHELL_COMMANDS.
 @ REM NOTE: This script must be encoded with UTF8 without BOM.
-@ SETLOCAL ENABLEEXTENSIONS & SET "ERRORLEVEL="
+@ SETLOCAL ENABLEEXTENSIONS 
+@ SET "ERRORLEVEL=" & SET "PSCMDARGS=%*"
+@ IF DEFINED PSCMDARGS @ SET "PSCMDARGS=%PSCMDARGS:"=\"%"
 @ SET "PSCMDPATH=%~f0" & SET "PSCMDLINE=$PSCmdCommandPath = $env:PSCMDPATH"
 @ SET "PSCMDLINE=%PSCMDLINE%; $PSCmdScriptRoot = $(Split-Path $PSCmdCommandPath -Parent)"
 @ SET "PSCMDLINE=%PSCMDLINE%; $PSDefaultParameterValues['*:Encoding'] = 'UTF8'"
@@ -13,7 +15,7 @@
 @ SET "PSCMDLINE=%PSCMDLINE%; if ($PSCmdIndex -lt 0) { Write-Error $PSCmdNoLabel; exit 1 }"
 @ SET "PSCMDLINE=%PSCMDLINE%; $PSCmdRange = $($PSCmdIndex + 1)..$($PSCmdContent.Length)"
 @ SET "PSCMDLINE=%PSCMDLINE%; $PSCmdContent = $($PSCmdContent[$PSCmdRange] | Out-String)"
-@ SET "PSCMDLINE=%PSCMDLINE%; & $([scriptblock]::Create($PSCmdContent)) %*"
+@ SET "PSCMDLINE=%PSCMDLINE%; & $([scriptblock]::Create($PSCmdContent)) %PSCMDARGS% "
 @ PowerShell -Command "%PSCMDLINE%"
 @ EXIT /B %ERRORLEVEL%
 
