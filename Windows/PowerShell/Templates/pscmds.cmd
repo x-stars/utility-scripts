@@ -1,21 +1,25 @@
 @ REM Invoke PowerShell commands below : POWERSHELL_COMMANDS.
 @ REM NOTE: This script must be encoded with UTF8 without BOM.
 @ SETLOCAL ENABLEEXTENSIONS 
-@ SET "ERRORLEVEL=" & SET "PSCMDARGS=%*"
+@ SET "ERRORLEVEL=" & SET "PSCMDPATH=%~f0" & SET "PSCMDARGS=%*"
 @ IF DEFINED PSCMDARGS @ SET "PSCMDARGS=%PSCMDARGS:"=\"%"
-@ SET "PSCMDPATH=%~f0" & SET "PSCMDLINE=$PSCmdCommandPath = $env:PSCMDPATH"
-@ SET "PSCMDLINE=%PSCMDLINE%; $PSCmdScriptRoot = $(Split-Path $PSCmdCommandPath -Parent)"
-@ SET "PSCMDLINE=%PSCMDLINE%; $PSDefaultParameterValues['*:Encoding'] = 'UTF8'"
-@ SET "PSCMDLINE=%PSCMDLINE%; $OutputEncoding = [System.Text.UTF8Encoding]::new($false)"
-@ SET "PSCMDLINE=%PSCMDLINE%; [System.Console]::InputEncoding = $OutputEncoding"
-@ SET "PSCMDLINE=%PSCMDLINE%; [System.Console]::OutputEncoding = $OutputEncoding"
-@ SET "PSCMDLINE=%PSCMDLINE%; $PSCmdContent = $(Get-Content -LiteralPath $PSCmdCommandPath)"
-@ SET "PSCMDLINE=%PSCMDLINE%; $PSCmdIndex = $PSCmdContent.IndexOf(': POWERSHELL_COMMANDS')"
-@ SET "PSCMDLINE=%PSCMDLINE%; $PSCmdNoLabel = 'Label : POWERSHELL_COMMANDS not found.'"
-@ SET "PSCMDLINE=%PSCMDLINE%; if ($PSCmdIndex -lt 0) { Write-Error $PSCmdNoLabel; exit 1 }"
-@ SET "PSCMDLINE=%PSCMDLINE%; $PSCmdRange = $($PSCmdIndex + 1)..$($PSCmdContent.Length)"
-@ SET "PSCMDLINE=%PSCMDLINE%; $PSCmdContent = $($PSCmdContent[$PSCmdRange] | Out-String)"
-@ SET "PSCMDLINE=%PSCMDLINE%; & $([scriptblock]::Create($PSCmdContent)) %PSCMDARGS% "
+@ SET "#1=$PSCmdCommandPath = $env:PSCMDPATH"
+@ SET "#2=$PSCmdScriptRoot = $(Split-Path $PSCmdCommandPath -Parent)"
+@ SET "#3=$PSDefaultParameterValues['*:Encoding'] = 'UTF8'"
+@ SET "#4=$OutputEncoding = [System.Text.UTF8Encoding]::new($false)"
+@ SET "#5=[System.Console]::InputEncoding = $OutputEncoding"
+@ SET "#6=[System.Console]::OutputEncoding = $OutputEncoding"
+@ SET "#7=$PSCmdContent = $(Get-Content -LiteralPath $PSCmdCommandPath)"
+@ SET "#8=$PSCmdIndex = $PSCmdContent.IndexOf(': POWERSHELL_COMMANDS')"
+@ SET "#9=$PSCmdNoLabel = 'Label : POWERSHELL_COMMANDS not found.'"
+@ SET "#10=if ($PSCmdIndex -lt 0) { Write-Error $PSCmdNoLabel; exit 1 }"
+@ SET "#11=$PSCmdRange = $($PSCmdIndex + 1)..$($PSCmdContent.Length)"
+@ SET "#12=$PSCmdContent = $($PSCmdContent[$PSCmdRange] | Out-String)"
+@ SET "#13=& $([scriptblock]::Create($PSCmdContent))"
+@ SET "PSCMDLINE=%#1%; %#2%; %#3%; %#4%; %#5%; %#6%; %#7%; %#8%; %#9%"
+@ SET "PSCMDLINE=%PSCMDLINE%; %#10%; %#11%; %#12%; %#13% %PSCMDARGS% "
+@ SET #1=& SET #2=& SET #3=& SET #4=& SET #5=& SET #6=& SET #7=
+@ SET #8=& SET #9=& SET #10=& SET #11=& SET #12=& SET #13=
 @ PowerShell -Command "%PSCMDLINE%"
 @ EXIT /B %ERRORLEVEL%
 
