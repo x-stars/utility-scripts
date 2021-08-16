@@ -6,15 +6,15 @@
 @ IF DEFINED WSLCMDARGS @ SET "WSLCMDARGS=%WSLCMDARGS:\=\\%"
 @ IF DEFINED WSLCMDARGS @ SET "WSLCMDARGS=%WSLCMDARGS:"=\"%"
 @ SET "WSLCMDPATH=%~f0" & SET "WSLCMDINDEX="
-@ FOR /F "tokens=1,* delims=:" %%L IN (
-    '@ FINDSTR /LNX /C:": WSLSHELL_COMMANDS" "%WSLCMDPATH%"'
+@ FOR /F "usebackq tokens=1,* delims=:" %%L IN (
+    `@ FINDSTR /LNX /C:": WSLSHELL_COMMANDS" "%WSLCMDPATH%"`
 ) DO @ SET /A WSLCMDINDEX = %%L + 1 & GOTO BREAK_FINDLABEL
 : BREAK_FINDLABEL
 @ SET "WSLCMDNOLABEL=Label : WSLSHELL_COMMANDS not found."
 @ IF NOT DEFINED WSLCMDINDEX @ ECHO>&2 %WSLCMDNOLABEL%& EXIT /B 1
 @ SET "SHELL=/bin/sh"
-@ FOR /F "tokens=1,* delims=:#!" %%L IN (
-    '@ FINDSTR /BN /C:"#!" "%WSLCMDPATH%"'
+@ FOR /F "usebackq tokens=1,* delims=:#!" %%L IN (
+    `@ FINDSTR /BN /C:"#!" "%WSLCMDPATH%"`
 ) DO @ IF %WSLCMDINDEX% == %%L @ SET "SHELL=%%M" & GOTO BREAK_FINDSHELL
 : BREAK_FINDSHELL
 @ SET "#1=export WSLCMDPATH=`wslpath '%WSLCMDPATH:'='\''%'`"
