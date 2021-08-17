@@ -1,4 +1,4 @@
-#.SYNOPSIS
+﻿#.SYNOPSIS
 # 获取 PowerShell 预定义类型及其对应框架类型的名称。
 
 [System.AppDomain]::CurrentDomain.GetAssemblies() |

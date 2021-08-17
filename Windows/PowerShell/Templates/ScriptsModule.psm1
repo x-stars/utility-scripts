@@ -5,7 +5,7 @@ Get-ChildItem $PSScriptRoot '*.ps1' -File | ForEach-Object `
 {
     $FunctionName = $_.BaseName
     $FunctionPath = $(Join-Path Function: $FunctionName)
-    $ScriptContent = $(Get-Content $_.FullName -Raw)
+    $ScriptContent = $(Get-Content -LiteralPath $_.FullName -Raw)
     $HelpForward = ".FORWARDHELPTARGETNAME $($_.FullName)"
     $CommentHelp = @('<#', $HelpForward, '#>')
     $ScriptAst = [scriptblock]::Create($ScriptContent).Ast
@@ -19,7 +19,7 @@ Get-ChildItem $PSScriptRoot '*.ps1' -File | ForEach-Object `
     $FunctionBody = $ParamBlock + @('') + $ProcessBlock
     $FunctionContent = $FunctionHead + @('') + $FunctionBody
     $FunctionContent = $($FunctionContent | Out-String)
-    Set-Content $FunctionPath $FunctionContent
+    Set-Content -LiteralPath $FunctionPath $FunctionContent
     $ScriptAst.ParamBlock.Attributes |
     Where-Object { [string]$_.TypeName -ieq 'Alias' } |
     ForEach-Object { $_.PositionalArguments.Value } |
