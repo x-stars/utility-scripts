@@ -1,7 +1,8 @@
 #.SYNOPSIS
 # Invoke Git command recursively in parallel jobs.
 
-$GitArguments = $args
+$InformationPreference = 'Continue'
+$TotalErrors = 0; $GitArguments = $args
 $RootDirectory = $(Get-Location).ProviderPath
 Get-ChildItem . -Recurse '.git' -Directory -Force | ForEach-Object `
 {
@@ -26,9 +27,10 @@ Receive-Job -Wait -AutoRemoveJob | ForEach-Object `
     [System.Console]::ForegroundColor = 'Magenta'
     Write-Output "REPO: $($_.Repository)"
     [System.Console]::ResetColor()
-    foreach ($Line in $_.GitError) { Write-Warning $Line }
+    foreach ($Line in $_.GitError) { Write-Information $Line }
     foreach ($Line in $_.GitOutput) { Write-Output $Line }
     $ExitMessage = 'exit with code {0}' -f $_.ExitCode
     if ($_.ExitCode -ne 0) { Write-Warning $ExitMessage }
     Write-Output ''
 }
+exit $TotalErrors
