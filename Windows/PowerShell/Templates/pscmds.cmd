@@ -23,7 +23,7 @@
 @ SET "PSCMDLINE=%PSCMDLINE%; %#10%; %#11%; %#12%; %#13%; %#14%; %#15%"
 @ SET #1=& SET #2=& SET #3=& SET #4=& SET #5=& SET #6=& SET #7=& SET #8=
 @ SET #9=& SET #10=& SET #11=& SET #12=& SET #13=& SET #14=& SET #15=
-@ PowerShell -Command "%PSCMDLINE%"
+@ PowerShell -Command %PSCMDOPTS% "%PSCMDLINE%"
 @ EXIT /B %ERRORLEVEL%
 
 @ REM Write PowerShell commands below : POWERSHELL_COMMANDS.

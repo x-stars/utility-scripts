@@ -4,6 +4,7 @@
 .DESCRIPTION
     创建一个能运行输入的 PowerShell 脚本的可执行文件。除脚本文件之外，还允许输入脚本文件所依赖的其他引用文件。
     输入的脚本文件和其他引用文件将会嵌入生成的可执行文件中，并在运行时输出为临时文件由 PowerShell 执行。
+    当需要获取生成的可执行文件的路径时，应从环境变量 $env:PSEXEPATH 获取，$PSCommandPath 将指向临时文件。
     在调用引用文件时，应使用 $(Join-Path $PSScriptRoot '(ReferenceName)') 命令来获取引用文件的路径。
 .PARAMETER Path
     可执行文件的路径。可带上参数名从管道接收值。
@@ -109,8 +110,9 @@ namespace XstarS.PowerShell.ScriptHost
         /// </summary>
         internal static void Main()
         {
-            // 设定临时文件的输出路径。
+            // 设定环境变量和临时文件的输出路径。
             var thisAsm = Assembly.GetExecutingAssembly();
+            Environment.SetEnvironmentVariable("PSEXEPATH", thisAsm.Location);
             var tempDir = Path.Combine(Path.GetTempPath(),
                 "PowerShellScriptHost." + thisAsm.GetName().Name);
             var resNames = thisAsm.GetManifestResourceNames();

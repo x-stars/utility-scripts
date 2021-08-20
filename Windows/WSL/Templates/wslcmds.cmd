@@ -25,7 +25,7 @@
 @ SET "#6=EXITCODE=$?; rm \"$WSLCMDTEMP\"; exit $EXITCODE"
 @ SET "WSLCMDLINE=%#1%; %#2%; %#3% | %#4%; %#5%; %#6%"
 @ SET #1=& SET #2=& SET #3=& SET #4=& SET #5=& SET #6=
-@ wsl.exe --exec /bin/sh -c "%WSLCMDLINE%"
+@ wsl.exe --exec /bin/sh -c %WSLCMDOPTS% "%WSLCMDLINE%"
 @ EXIT /B %ERRORLEVEL%
 
 @ REM Write WSL shell commands below : WSLSHELL_COMMANDS.
