@@ -52,7 +52,9 @@ process
     {
         $link = $Uri[$index]
         $file = if ($OutFile -and $OutFile[$index]) { $OutFile[$index] }
-        else { Split-Path $link.LocalPath -Leaf }
+                else { Split-Path $link.LocalPath -Leaf }
+        [System.IO.Path]::GetInvalidFileNameChars() |
+            ForEach-Object { $file = $file.Replace($_, '_') }
         for ($success, $try = $false, 0; -not $success -and $try -lt 3; $try++)
         {
             try
