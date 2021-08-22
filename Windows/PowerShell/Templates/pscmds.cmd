@@ -18,7 +18,7 @@
 @ SET "#12=$PSCmdContent = $($PSCmdContent[$PSCmdRange] | Out-String)"
 @ SET "#13=$PSCmdDefPath = $(Join-Path Function: $env:PSCMDNAME'.pscmd')"
 @ SET "#14=Set-Content -LiteralPath $PSCmdDefPath $PSCmdContent"
-@ SET "#15=$input | & $(Split-Path $PSCmdDefPath -Leaf) %PSCMDARGS% "
+@ SET "#15=& $(Split-Path $PSCmdDefPath -Leaf) %PSCMDARGS% "
 @ SET "PSCMDLINE=%#1%; %#2%; %#3%; %#4%; %#5%; %#6%; %#7%; %#8%; %#9%"
 @ SET "PSCMDLINE=%PSCMDLINE%; %#10%; %#11%; %#12%; %#13%; %#14%; %#15%"
 @ SET #1=& SET #2=& SET #3=& SET #4=& SET #5=& SET #6=& SET #7=& SET #8=
