@@ -41,7 +41,7 @@
 @ ECHO=& %PT%="%CMDNAME%"& ECHO= variable="command"& ECHO=
 @ ECHO=  variable  Specifies the variable name to set.
 @ ECHO=  command   Specifies the command to execute.
-@ ECHO=& ECHO=If variable %%SETASERR%% is set to any value,
+@ ECHO=& ECHO=If variable SETASERR is set to any value,
 @ %PT%="%CMDNAME%"& ECHO= will set ERRORLEVEL of the command.
 @ ECHO=NOTE: This will slow down the command execution.
 @ ECHO=& ECHO=These variables will be also set:& ECHO=
