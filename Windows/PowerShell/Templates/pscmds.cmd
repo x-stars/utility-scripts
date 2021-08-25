@@ -1,8 +1,10 @@
 @ REM Invoke PowerShell commands below : POWERSHELL_COMMANDS.
-@ REM NOTE: This script must be encoded with UTF8 without BOM.
+@ REM Set PSCMDSTDIN to any value to pass input by stdin stream.
+@ REM NOTE: This script must be encoded with UTF-8 without BOM.
 @ SETLOCAL ENABLEEXTENSIONS
 @ SET "ERRORLEVEL=" & SET "PSCMDARGS=%*"
 @ SET "PSCMDNAME=%~n0" & SET "PSCMDPATH=%~f0"
+@ SET "PSCMDOPTS=-NoProfile" & SET "PSCMDSTDIN="
 @ IF DEFINED PSCMDARGS @ SET "PSCMDARGS=%PSCMDARGS:"=\"%"
 @ SET "#1=$PSCmdCommandPath = $env:PSCMDPATH;"
 @ SET "#2=$PSCmdScriptRoot = $(Split-Path $PSCmdCommandPath -Parent);"
@@ -18,9 +20,9 @@
 @ SET "#12=$PSCmdContent = $($PSCmdContent[$PSCmdRange] | Out-String);"
 @ SET "#13=$PSCmdDefPath = $(Join-Path Function: $env:PSCMDNAME'.pscmd');"
 @ SET "#14=Set-Content -LiteralPath $PSCmdDefPath $PSCmdContent;"
-@ SET "#15=if ([System.Console]::IsInputRedirected) {"
-@ SET "#16=$input | & $(Split-Path $PSCmdDefPath -Leaf) %PSCMDARGS%"
-@ SET "#17=} else { & $(Split-Path $PSCmdDefPath -Leaf) %PSCMDARGS% }"
+@ SET "#15=if ([System.Console]::IsInputRedirected -and !$env:PSCMDSTDIN)"
+@ SET "#16={ $input | & $(Split-Path $PSCmdDefPath -Leaf) %PSCMDARGS% }"
+@ SET "#17=else { & $(Split-Path $PSCmdDefPath -Leaf) %PSCMDARGS% }"
 @ FOR /L %%L IN (1, 1, 17) DO @ CALL SET "#0=%%#0%% %%#%%L%%"
 @ FOR /L %%L IN (1, 1, 17) DO @ CALL SET "#%%L="
 @ SET "PSCMDLINE=%#0:~1%" & SET "#0="
