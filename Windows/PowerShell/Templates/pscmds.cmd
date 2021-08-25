@@ -1,4 +1,4 @@
-@ REM Invoke PowerShell commands below : POWERSHELL_COMMANDS.
+@ REM Invoke PowerShell commands below ": POWERSHELL_COMMANDS".
 @ REM Set PSCMDSTDIN to any value to pass input by stdin stream.
 @ REM NOTE: This script must be encoded with UTF-8 without BOM.
 @ SETLOCAL ENABLEEXTENSIONS
@@ -14,8 +14,8 @@
 @ SET "#6=[System.Console]::OutputEncoding = $OutputEncoding;"
 @ SET "#7=$PSCmdContent = $(Get-Content -LiteralPath $PSCmdCommandPath);"
 @ SET "#8=$PSCmdIndex = $PSCmdContent.IndexOf(': POWERSHELL_COMMANDS');"
-@ SET "#9=$PSCmdNoLabel = 'Label : POWERSHELL_COMMANDS not found.';"
-@ SET "#10=if ($PSCmdIndex -lt 0) { Write-Error $PSCmdNoLabel; exit 1 };"
+@ SET "#9=$PSCmdNoLabel = 'Label \": POWERSHELL_COMMANDS\" not found.';"
+@ SET "#10=if ($PSCmdIndex -lt 0) { Write-Warning $PSCmdNoLabel; exit 1 };"
 @ SET "#11=$PSCmdRange = $($PSCmdIndex + 1)..$($PSCmdContent.Length);"
 @ SET "#12=$PSCmdContent = $($PSCmdContent[$PSCmdRange] | Out-String);"
 @ SET "#13=$PSCmdDefPath = $(Join-Path Function: $env:PSCMDNAME'.pscmd');"
@@ -29,7 +29,7 @@
 @ PowerShell %PSCMDOPTS% -Command "%PSCMDLINE%"
 @ EXIT /B %ERRORLEVEL%
 
-@ REM Write PowerShell commands below : POWERSHELL_COMMANDS.
+@ REM Write PowerShell commands below ": POWERSHELL_COMMANDS".
 @ REM Use $PSCmdCommandPath & $PSCmdScriptRoot to refer the script path,
 @ REM     as $PSCommandPath & $PSScriptRoot are not overridable.
 : POWERSHELL_COMMANDS

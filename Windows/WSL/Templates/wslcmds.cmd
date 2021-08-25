@@ -1,4 +1,4 @@
-@ REM Invoke WSL shell commands below : WSLSHELL_COMMANDS.
+@ REM Invoke WSL shell commands below ": WSLSHELL_COMMANDS".
 @ REM NOTE: This script must be encoded with UTF-8 without BOM.
 @ SETLOCAL ENABLEEXTENSIONS
 @ SET "ERRORLEVEL=" & CHCP 65001 1>NUL:
@@ -10,7 +10,7 @@
     `@ FINDSTR /LNX /C:": WSLSHELL_COMMANDS" "%WSLCMDPATH%"`
 ) DO @ SET /A WSLCMDINDEX = %%L + 1 & GOTO BREAK_FINDLABEL
 : BREAK_FINDLABEL
-@ SET "WSLCMDNOLABEL=Label : WSLSHELL_COMMANDS not found."
+@ SET "WSLCMDNOLABEL=Label ": WSLSHELL_COMMANDS" not found."
 @ IF NOT DEFINED WSLCMDINDEX @ ECHO>&2 %WSLCMDNOLABEL%& EXIT /B 1
 @ SET "SHELL=/bin/sh"
 @ FOR /F "usebackq tokens=1,* delims=:#!" %%L IN (
@@ -28,7 +28,7 @@
 @ wsl.exe --exec /bin/sh -c "%WSLCMDLINE%"
 @ EXIT /B %ERRORLEVEL%
 
-@ REM Write WSL shell commands below : WSLSHELL_COMMANDS.
+@ REM Write WSL shell commands below ": WSLSHELL_COMMANDS".
 @ REM Use $WSLCMDPATH to refer the script path,
 @ REM     as $0 is a temp script and not overridable.
-: WSLSHELL_COMMANDS
+: WSLSHELL_COMMANDS 
