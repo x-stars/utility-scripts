@@ -30,11 +30,9 @@
     原作者：Mooser Lee https://www.pstips.net/
     参考来源：https://www.pstips.net/convert-ps1toexe.html
 .EXAMPLE
-    New-ScriptExecutable.ps1 .\GetSomething.exe -Script .\Get-Something.ps1
+    New-ScriptExecutable.ps1 GetSomething.exe -Script Get-Something.ps1
 .EXAMPLE
-    Get-ChildItem *.ps1 | New-ScriptExecutable.ps1
-.EXAMPLE
-    Get-ChildItem *.ps1 | New-ScriptExecutable.ps1 -Reference $(Get-ChildItem .\SomeModule\*)
+    Get-Item *.ps1 | New-ScriptExecutable.ps1 -Reference $(Get-ChildItem SomeModule)
 .LINK
     https://www.pstips.net/convert-ps1toexe.html
 #>

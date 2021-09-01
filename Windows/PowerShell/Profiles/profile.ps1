@@ -5,7 +5,7 @@
 $PSCmdLineArgs = [System.Environment]::GetCommandLineArgs()
 if ($($PSCmdLineArgs[0] -inotlike '*PowerShell_ISE*') -and
     $($PSCmdLineArgs -inotcontains '-NoProfile') -and
-    $($PSCmdLineArgs -imatch '(-Command|-File|.*\.ps1)') -and
+    $($PSCmdLineArgs -imatch '^(-Command|-File|.*\.ps1)$') -and
     $($PSCmdLineArgs -inotcontains '-NoExit')) { exit }
 
 # 设定内置配置变量。
