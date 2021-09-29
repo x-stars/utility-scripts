@@ -53,8 +53,7 @@
 @ EXIT /B %ERRORLEVEL%
 
 : USAGE
-@ IF DEFINED OPT @ ECHO>&2 error: invalid options at %OPT%
-@ IF NOT DEFINED OPT @ ECHO>&2 error: invalid destination
-@ SET OPTMSG=[-i identity_file] [-p port] [-o ssh_options]...
+@ IF DEFINED OPT @ ECHO>&2 error: invalid option '%OPT%'
+@ SET OPTMSG=[-i identity_file] [-p port] [-o option]...
 @ ECHO>&2 usage: %~n0 %OPTMSG% [user@]hostname
 @ EXIT /B %ERRORLEVEL%
