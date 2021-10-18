@@ -8,9 +8,9 @@
 @ SET CD=
 @ CALL:LOCAL
 @ IF EXIST "%LOCAL_FILE%" @ (
-    @ mvn -s "%LOCAL_FILE%" %*
+    @ CALL mvn -s "%LOCAL_FILE%" %*
 ) ELSE @ (
-    @ mvn %*
+    @ CALL mvn %*
 )
 @ EXIT /B %ERRORLEVEL%
 

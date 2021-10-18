@@ -13,7 +13,7 @@
     @ IF EXIST "%%~fP\.git" @ (
         @ PUSHD %%~fP
         @ CALL:HEADER
-        @ git %*
+        @ CALL git %*
         @ CALL:STATUS
         @ ECHO=
         @ POPD
