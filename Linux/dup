@@ -27,8 +27,8 @@ usage ()
 [ $# -eq 0 ] && usage>&2 && exit 1
 
 for FILE in "$@"; do
-    BASEDIR=`dirname "$FILE"`
-    DUPNAME=`basename "$FILE" |
+    BASEDIR=`dirname -- "$FILE"`
+    DUPNAME=`basename -- "$FILE" |
              sed $SEDOPTS "$SEDEXPR"`
-    cp -r "$FILE" "$BASEDIR/$DUPNAME"
+    cp -r -- "$FILE" "$BASEDIR/$DUPNAME"
 done

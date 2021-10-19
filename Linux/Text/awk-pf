@@ -23,4 +23,4 @@ usage ()
 [ -n "$HELP" ] && usage && exit 0
 [ -z "$FIELDS" ] && usage>&2 && exit 1
 
-awk $OPTIONS "{ print $FIELDS }" "$@"
+awk $OPTIONS -- "{ print $FIELDS }" "$@"

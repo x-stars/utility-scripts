@@ -49,5 +49,5 @@ if [ -f "$CTEMP" ]; then
 fi
 
 if [ -n "$EDITOR" ] && [ -t 0 ]; then
-    "$EDITOR" "$@"
+    "$EDITOR" -- "$@"
 fi
