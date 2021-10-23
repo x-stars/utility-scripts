@@ -52,7 +52,7 @@ $parameters = @{ Path = '.'; Recurse = $true; File = $true }
 而后使用参数展开运算符 `@` 将其传递到命令：
 
 ``` PowerShell
-Get-ChildItem @parameter
+Get-ChildItem @parameters
 ```
 
 等价于：
