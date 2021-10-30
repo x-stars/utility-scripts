@@ -15,17 +15,18 @@ Get-ChildItem . -Recurse '.git' -Directory -Force | ForEach-Object `
         $Repository = $Repository.Replace($DirectorySeparator, [char]'/')
         $Repository = $([regex]'^\./').Replace($Repository, '')
         Set-Location -LiteralPath $RepositoryPath
+        $GitBranch = $(git branch | Where-Object { $_ -like '`* *' }).Substring(2)
         $GitError = $($($GitOutput = $(git $GitArguments)) 2>&1)
         [PSCustomObject]@{
-            Repository = $Repository; GitOutput = [string[]]$GitOutput
-            GitError = [string[]]$GitError; ExitCode = $LASTEXITCODE
+            Repository = $Repository; Branch = $GitBranch; ExitCode = $LASTEXITCODE
+            GitOutput = [string[]]$GitOutput; GitError = [string[]]$GitError
         }#[PSCustomObject]
     }
 } |
 Receive-Job -Wait -AutoRemoveJob | ForEach-Object `
 {
     [System.Console]::ForegroundColor = 'Magenta'
-    Write-Output "REPO: $($_.Repository)"
+    Write-Output "REPO: $($_.Repository) ($($_.Branch))"
     [System.Console]::ResetColor()
     foreach ($Line in $_.GitError) { Write-Information $Line }
     foreach ($Line in $_.GitOutput) { Write-Output $Line }
