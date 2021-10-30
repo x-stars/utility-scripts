@@ -14,7 +14,7 @@ done
 
 usage ()
 {
-    CMDNAME=`basename "$0"`
+    CMDNAME=$(basename "$0")
     echo "Usage: $CMDNAME [-s SHELL] FILE..."
     echo 'Create scripts with specific interpreter.'
     echo '    Script content can be read from stdin.'

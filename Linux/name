@@ -12,12 +12,12 @@ fi
 
 for NAME in "$@"; do
     if [ -d "$NAME" -a -x "$NAME" ]; then
-        FDIR=`cd -- "$NAME" && pwd`
+        FDIR=$(cd -- "$NAME" && pwd)
         echo "$FDIR"
-    elif DIR=`dirname -- "$NAME" && pwd` &&
+    elif DIR=$(dirname -- "$NAME" && pwd) &&
          [ -d "$DIR" -a -x "$DIR" ]; then
-        FDIR=`cd -- "$DIR" && pwd`
-        FILE=`basename -- "$NAME"`
+        FDIR=$(cd -- "$DIR" && pwd)
+        FILE=$(basename -- "$NAME")
         test "$FDIR" = / && FDIR=
         echo "$FDIR/$FILE"
     else

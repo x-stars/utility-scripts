@@ -12,8 +12,8 @@ find . -name .git > $PIPE &
 
 ERRORS=0
 while read -r DGIT; do
-    REPO=`dirname "$DGIT" |
-          sed 's,^\./,,'`
+    REPO=$(dirname "$DGIT" |
+           sed 's,^\./,,')
     cd -- "$REPO"
     printf "$FHEAD" "$REPO"
     git "$@" ; CODE=$?

@@ -13,7 +13,7 @@ done
 
 usage ()
 {
-    CMDNAME=`basename "$0"`
+    CMDNAME=$(basename "$0")
     ARGNAME='[OPTION]... FIELD... [-- FILE...]'
     echo "Usage: $CMDNAME $ARGNAME"
     echo 'Print specific fields of inputs.'

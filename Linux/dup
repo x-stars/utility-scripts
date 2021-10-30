@@ -15,7 +15,7 @@ done
 
 usage ()
 {
-    CMDNAME=`basename "$0"`
+    CMDNAME=$(basename "$0")
     echo "Usage: $CMDNAME [-r] [FROM:TO]... FILE..."
     echo 'Duplicate and rename files by FROM:TO exprs.'
     echo 'FROM:TO exprs use regexp; default value: $:~'
@@ -27,8 +27,8 @@ usage ()
 [ $# -eq 0 ] && usage>&2 && exit 1
 
 for FILE in "$@"; do
-    BASEDIR=`dirname -- "$FILE"`
-    DUPNAME=`basename -- "$FILE" |
-             sed $SEDOPTS "$SEDEXPR"`
+    BASEDIR=$(dirname -- "$FILE")
+    DUPNAME=$(basename -- "$FILE" |
+              sed $SEDOPTS "$SEDEXPR")
     cp -r -- "$FILE" "$BASEDIR/$DUPNAME"
 done
