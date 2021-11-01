@@ -4,7 +4,7 @@
 $InformationPreference = 'Continue'
 $TotalErrors = 0; $GitArguments = $args
 $RootDirectory = $(Get-Location).ProviderPath
-Get-ChildItem . -Recurse '.git' -Directory -Force | ForEach-Object `
+Get-ChildItem . -Recurse .git -Directory -Force | ForEach-Object `
 {
     $RepositoryPath = $(Split-Path $_.FullName -Parent)
     Start-Job -ArgumentList @($RootDirectory, $RepositoryPath, $GitArguments) `
@@ -32,6 +32,7 @@ Receive-Job -Wait -AutoRemoveJob | ForEach-Object `
     foreach ($Line in $_.GitOutput) { Write-Output $Line }
     $ExitMessage = 'exit with code {0}' -f $_.ExitCode
     if ($_.ExitCode -ne 0) { Write-Warning $ExitMessage }
+    if ($_.ExitCode -ne 0) { $TotalErrors += 1 }
     Write-Output ''
 }
 exit $TotalErrors

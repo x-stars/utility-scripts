@@ -35,8 +35,7 @@
 @ EXIT /B %ERRORLEVEL%
 
 : HEADER
-@ SET  REPO=.%%CD:~%RLEN%%%
-@ CALL SET  "REPO=%REPO%"
+@ CALL SET  "REPO=.%%CD:~%RLEN%%%"
 @ SET "REPO=%REPO:*.\=%"
 @ SET "REPO=%REPO:\=/%"
 @ FOR /F "tokens=1,*" %%M IN (
