@@ -2,9 +2,9 @@
 
 EXITMSG="exit with code"
 test ! -t 1 && FHEAD=">>> %s (%s) <<<\n" ||
-    FHEAD="\e[0m>>> \e[35m%s\e[0m \e[36m(%s)\e[0m <<<\n"
+    FHEAD="\e[0m>>> \e[1;35m%s\e[0m \e[1;36m(%s)\e[0m <<<\n"
 test ! -t 2 && FSTAT="!!! $EXITMSG %d !!!\n" ||
-    FSTAT="\e[0m!!! \e[33m$EXITMSG\e[0m \e[31m%d\e[0m !!!\n"
+    FSTAT="\e[0m!!! \e[1;33m$EXITMSG\e[0m \e[1;33m%d\e[0m !!!\n"
 
 PIPE=/tmp/fgit-$$.pipe
 test -p $PIPE || mkfifo $PIPE

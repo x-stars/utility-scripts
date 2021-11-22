@@ -41,10 +41,10 @@
 @ FOR /F "tokens=1,*" %%M IN (
     '@ CALL git branch'
 ) DO @ IF "%%M"=="*" SET "BRANCH=%%N"
-@ %PT%>CON:=[00m& %PT%=">>> "
-@ %PT%>CON:=[35m& %PT%="%REPO% "
-@ %PT%>CON:=[36m& %PT%="(%BRANCH%)"
-@ %PT%>CON:=[00m& ECHO= ^<^<^<
+@ %PT%>CON:=[0m& %PT%=">>> "
+@ %PT%>CON:=[1;35m& %PT%="%REPO% "
+@ %PT%>CON:=[1;36m& %PT%="(%BRANCH%)"
+@ %PT%>CON:=[0m& ECHO= ^<^<^<
 @ EXIT /B %ERRORLEVEL%
 
 : STATUS
@@ -52,8 +52,8 @@
 @ IF %EXITCODE% == 0 @ EXIT /B 0
 @ SET /A TOTALERROR += 1
 @ SET EXITMSG=exit with code
-@ %PT%>CON:=[00m& %PT%>&2="!!! "
-@ %PT%>CON:=[33m& %PT%>&2="%EXITMSG% "
-@ %PT%>CON:=[31m& %PT%>&2="%EXITCODE%"
-@ %PT%>CON:=[00m& ECHO>&2= !!!
+@ %PT%>CON:=[0m& %PT%>&2="!!! "
+@ %PT%>CON:=[1;33m& %PT%>&2="%EXITMSG% "
+@ %PT%>CON:=[1;33m& %PT%>&2="%EXITCODE%"
+@ %PT%>CON:=[0m& ECHO>&2= !!!
 @ EXIT /B %ERRORLEVEL%
