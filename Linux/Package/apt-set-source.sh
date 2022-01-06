@@ -1,4 +1,5 @@
 #!/bin/sh
+# Set apt source host.
 
 ARC_SOURCE=archive.ubuntu.com
 SEC_SOURCE=security.ubuntu.com

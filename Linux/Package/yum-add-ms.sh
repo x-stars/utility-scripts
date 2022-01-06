@@ -1,4 +1,5 @@
 #!/bin/sh
+# Add Microsoft source to yum.
 
 osinfo ()
 {

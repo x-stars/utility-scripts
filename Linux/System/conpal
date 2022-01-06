@@ -1,4 +1,5 @@
 #!/bin/sh
+# Show console color palette.
 
 IDXSEQ=$(seq 0 7)
 CUBSEQ=$(seq 0 5)

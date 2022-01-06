@@ -1,4 +1,5 @@
 #!/bin/sh
+# Get absolute path.
 
 if [ $# -eq 0 ]; then
     pwd

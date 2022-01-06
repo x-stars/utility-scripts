@@ -1,4 +1,5 @@
 #!/bin/sh
+# Create SSH connection interactively.
 
 test -d "$HOME/.ssh" || mkdir "$HOME/.ssh"
 KNOWN_DESTS="$HOME/.ssh/known_destinations"

@@ -1,4 +1,5 @@
 #!/bin/sh
+# Add Microsoft source to apt.
 
 osinfo ()
 {

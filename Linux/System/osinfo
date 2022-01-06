@@ -1,4 +1,5 @@
 #!/bin/sh
+# Get OS info from os-release.
 
 if [ $# -eq 0 ]; then
     cat /etc/os-release
