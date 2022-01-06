@@ -1,10 +1,12 @@
 #!/bin/sh
+# Print fields of input by awk.
 
 OPTIONS= && FIELDS= && HELP=
 while [ $# -gt 0 ]; do
     case "$1" in
         --) shift 1; break;;
-        -h|--help)HELP=yes;;
+        -h) HELP=info;;
+    --help) HELP=info;;
         -*) OPTIONS="$OPTIONS $1";;
          *) FIELDS="$FIELDS \$$1";;
     esac
@@ -14,13 +16,12 @@ done
 usage ()
 {
     CMDNAME=$(basename "$0")
-    ARGNAME='[OPTION]... FIELD... [-- FILE...]'
-    echo "Usage: $CMDNAME $ARGNAME"
-    echo 'Print specific fields of inputs.'
+    ARGINFO='[OPTION]... FIELD... [-- FILE...]'
+    echo "Usage: $CMDNAME $ARGINFO"
+    echo 'Print specific fields of input by awk.'
     echo 'Options are the same as the awk.'
 }
-
 [ -n "$HELP" ] && usage && exit 0
-[ -z "$FIELDS" ] && usage>&2 && exit 1
+[ -z "$FIELDS" ] && usage >&2 && exit 1
 
 awk $OPTIONS -- "{ print $FIELDS }" "$@"

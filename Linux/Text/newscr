@@ -1,21 +1,22 @@
 #!/bin/sh
+# Create shell scripts.
 
-SHELL= && HELP=
+SHELL=/bin/sh && HELP=
 while [ $# -gt 0 ]; do
     case "$1" in
         --) shift 1; break;;
-        -s) shift 1; SHELL="$1";;
-        -*) HELP=yes;;
+        -s) SHELL="$2"; shift 1;;
+        -h) HELP=info;;
+    --help) HELP=info;;
+        -*) HELP=error;;
          *) break;;
     esac
     shift 1
 done
-[ -n "$SHELL" ] || SHELL=/bin/sh
 
 usage ()
 {
-    CMDNAME=$(basename "$0")
-    echo "Usage: $CMDNAME [-s SHELL] FILE..."
+    echo "Usage: $(basename "$0") [-s SHELL] FILE..."
     echo 'Create scripts with specific interpreter.'
     echo '    Script content can be read from stdin.'
     echo '    Editor will oepn if no script content.'
@@ -25,9 +26,9 @@ usage ()
     echo 'Variables:'
     echo '    EDITOR: script editor path or name.'
 }
-
-[ -n "$HELP" ] && usage && exit 0
-[ $# -eq 0 ] && usage>&2 && exit 1
+[ "$HELP" = info ] && usage && exit 0
+[ "$HELP" = error ] && usage >&2 && exit 1
+[ $# -eq 0 ] && usage >&2 && exit 1
 
 CTEMP=/tmp/newscr.$$.tmp
 if [ ! -t 0 ]; then
