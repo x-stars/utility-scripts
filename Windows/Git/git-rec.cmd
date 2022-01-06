@@ -39,7 +39,7 @@
 @ SET "REPO=%REPO:*.\=%"
 @ SET "REPO=%REPO:\=/%"
 @ FOR /F "tokens=1,*" %%M IN (
-    '@ CALL git branch'
+    '@ CALL git branch --no-color'
 ) DO @ IF "%%M"=="*" SET "BRANCH=%%N"
 @ %PT%>CON:=[0m& %PT%=">>> "
 @ %PT%>CON:=[1;35m& %PT%="%REPO% "

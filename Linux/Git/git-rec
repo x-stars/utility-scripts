@@ -1,4 +1,5 @@
 #!/bin/sh
+# Run Git command recursively.
 
 EXITMSG="exit with code"
 test ! -t 1 && FHEAD=">>> %s (%s) <<<\n" ||
@@ -15,8 +16,8 @@ while read -r DGIT; do
     REPO=$(dirname "$DGIT" |
            sed 's,^\./,,')
     cd -- "$REPO" || continue
-    BRANCH=$(git branch |
-             sed -n '/^*/ { s,^* ,,; p }')
+    BRANCH=$(git branch --no-color |
+             sed -n '/^\*/ { s,^\* ,,; p }')
     printf "$FHEAD" "$REPO" "$BRANCH"
     git "$@" ; CODE=$?
     if [ $CODE -ne 0 ]; then
