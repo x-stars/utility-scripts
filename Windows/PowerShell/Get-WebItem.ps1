@@ -29,8 +29,8 @@
     Invoke-WebRequest
 #>
 
-[CmdletBinding()]
 [Alias('gwi')]
+[CmdletBinding()]
 [OutputType([System.IO.FileInfo[]])]
 param
 (
@@ -81,9 +81,9 @@ process
     {
         $link = $Uri[$index]
         $file = if ($OutFile -and $OutFile[$index]) { $OutFile[$index] }
-        else { Split-Path $link.LocalPath -Leaf }
+                else { Split-Path $link.LocalPath -Leaf }
         [System.IO.Path]::GetInvalidFileNameChars() |
-        ForEach-Object { $file = $file.Replace($_, '_') }
+            ForEach-Object { $file = $file.Replace($_, '_') }
         for ($retry = 0; ($retry -le $MaxRetry) -or ($MaxRetry -lt 0); $retry++)
         {
             try
@@ -93,7 +93,7 @@ process
             }
             catch { Write-Warning $_ }
         }
-        Get-Item -LiteralPath $file
+        Get-Item -LiteralPath $file -Force
     }
 }
 

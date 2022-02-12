@@ -3,10 +3,10 @@
 
 # 仅交互模式下配置。
 $PSCmdLineArgs = [System.Environment]::GetCommandLineArgs()
-if ($($PSCmdLineArgs[0] -inotlike '*PowerShell_ISE*') -and
-    $($PSCmdLineArgs -inotcontains '-NoProfile') -and
-    $($PSCmdLineArgs -imatch '^(-Command|-File|.*\.ps1)$') -and
-    $($PSCmdLineArgs -inotcontains '-NoExit')) { exit }
+if (($PSCmdLineArgs[0] -inotlike '*PowerShell_ISE*') -and
+    ($PSCmdLineArgs -inotcontains '-NoProfile') -and
+    ($PSCmdLineArgs -imatch '^(-Command|-File|.*\.ps1)$') -and
+    ($PSCmdLineArgs -inotcontains '-NoExit')) { exit }
 
 # 设定内置配置变量。
 $PSDefaultParameterValues['*:Encoding'] = 'UTF8'
@@ -15,15 +15,22 @@ try { [System.Console]::InputEncoding = $OutputEncoding } catch { }
 try { [System.Console]::OutputEncoding = $OutputEncoding } catch { }
 
 # 定义内置命令别名。
+Set-Alias -Force error Write-Error
 Set-Alias -Force eval Invoke-Expression
+Set-Alias -Force guid New-Guid
+Set-Alias -Force hash Get-FileHash
 Set-Alias -Force new New-Object
 Set-Alias -Force out Out-File
+Set-Alias -Force read Read-Host
 
 # 定义简单用户命令。
 function bell { Write-Host "`a" -NoNewline }
 function mklink { cmd.exe /c mklink @args }
+function string {
+    process { foreach ($_ in $input) { [string]$_ } }
+    end     { foreach ($_ in $args)  { [string]$_ } } }
 function time { $cmd = [scriptblock]::Create($args);
-    $time = $(Get-Date); & $cmd; $(Get-Date) - $time }
+    $time = [datetime]::Now; & $cmd; [datetime]::Now - $time }
 
 # 定义命令提示配置。
 function prompt
