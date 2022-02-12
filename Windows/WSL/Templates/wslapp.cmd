@@ -3,7 +3,7 @@
 @ SET ERRORLEVEL=
 @ SET PROG=%~n0
 @ FOR /F "delims=" %%A IN (
-    '@ WSLPath.cmd %*'
+    '@ CALL WSLPath %*'
 ) DO @ SET ARGS=%%A
-@ wsl.exe --exec %PROG% %ARGS%
+@ wsl --exec %PROG% %ARGS%
 @ EXIT /B %ERRORLEVEL%
