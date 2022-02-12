@@ -7,5 +7,5 @@
 @ SET "PROG=%~n0" & SET "ARGS=%*"
 @ IF DEFINED ARGS @ SET "ARGS=%ARGS:\=\\\\%"
 @ IF DEFINED ARGS @ SET "ARGS=%ARGS:"=\"%"
-@ "%BASH%" -c "%PROG% %ARGS:"=\"%"
+@ "%BASH%" -c "%PROG% %ARGS%"
 @ EXIT /B %ERRORLEVEL%
