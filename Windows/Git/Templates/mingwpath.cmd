@@ -10,8 +10,6 @@
 : LOOP_ARGS
 @ SET ARG=%1
 @ IF NOT DEFINED ARG @ GOTO ENDLOOP_ARGS
-@ ECHO:%ARG% | FINDSTR /V "[\\][\\]" ^
-             | FINDSTR "[\\]" 1>NUL:
 @ IF NOT ERRORLEVEL 1 @ (
     @ SET "ARG=%~1"
     @ CALL:CONVERT
