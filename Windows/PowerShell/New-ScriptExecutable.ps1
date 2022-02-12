@@ -11,6 +11,8 @@
     默认为当前目录下与脚本文件同名的 *.exe 文件。
 .PARAMETER Script
     脚本文件的路径。可从管道接收值。
+.PARAMETER Win32Icon
+    可执行文件使用的图标文件的路径。
 .PARAMETER Reference
     脚本文件引用的其他文件的路径。
 .PARAMETER NoExit
@@ -26,8 +28,8 @@
     System.IO.FileInfo[]
     创建的可执行文件。
 .NOTES
+    需要在脚本目录下存在 PowerShellScriptWrapper.cs 文件。
     作者：天南十字星 https://github.com/x-stars
-    原作者：Mooser Lee https://www.pstips.net/
     参考来源：https://www.pstips.net/convert-ps1toexe.html
 .EXAMPLE
     New-ScriptExecutable.ps1 GetSomething.exe -Script Get-Something.ps1
@@ -37,8 +39,8 @@
     https://www.pstips.net/convert-ps1toexe.html
 #>
 
-[CmdletBinding()]
 [Alias('nse')]
+[CmdletBinding()]
 [OutputType([System.IO.FileInfo[]])]
 param
 (
@@ -67,6 +69,13 @@ param
         { Test-Path -LiteralPath $_ -PathType Leaf })]
     [string[]]$Reference
     ,
+    [Parameter(
+        Mandatory = $false)]
+    [ValidateNotNullOrEmpty()]
+    [ValidateScript(
+        { Test-Path -LiteralPath $_ -PathType Leaf })]
+    [string]$Win32Icon
+    ,
     [Parameter()]
     [switch]$NoExit
     ,
@@ -79,203 +88,68 @@ param
 
 begin
 {
-    # PowerShell 脚本宿主的 C# 源代码。
-    $scriptHostCode =
-<#lang=csharp#>@'
-using System;
-using System.Diagnostics;
-using System.IO;
-using System.Reflection;
+    $compilerPattern = [System.IO.Path]::Combine(
+        $env:SystemRoot, 'Microsoft.NET', '*', '*', 'csc.exe')
+    $compilerPath = $(Get-Item -Path $compilerPattern)[-1].FullName
 
-[assembly: CLSCompliant(true)]
-[assembly: AssemblyCompany("XstarS")]
-[assembly: AssemblyTitle("PowerShell Script Host")]
-[assembly: AssemblyProduct("XstarS.PowerShell.ScriptHost")]
-[assembly: AssemblyCopyright("Copyright © XstarS 2020")]
-[assembly: AssemblyVersion("1.0.0.0")]
-[assembly: AssemblyFileVersion("1.0.0.0")]
-[assembly: AssemblyInformationalVersion("1.0.0")]
+    $wrapperDefines = @('TRACE')
+    if ($NoExit) { $wrapperDefines += 'NOEXIT' }
+    if ($NoProfile) { $wrapperDefines += 'NOPROFILE' }
+    if ($NoWindow) { $scriptWrapperCode += 'NOWINDOW' }
+    if ($PSEdition -eq 'Core') { $wrapperDefines += 'PSCORE' }
 
-namespace XstarS.PowerShell.ScriptHost
-{
-    /// <summary>
-    /// PowerShell 内嵌脚本宿主程序。
-    /// </summary>
-    internal static class Program
-    {
-        /// <summary>
-        /// PowerShell 内嵌脚本宿主程序入口点。
-        /// </summary>
-        internal static void Main()
-        {
-            // 设定环境变量和临时文件的输出路径。
-            var thisAsm = Assembly.GetExecutingAssembly();
-            Environment.SetEnvironmentVariable("PSEXEPATH", thisAsm.Location);
-            var tempDir = Path.Combine(Path.GetTempPath(),
-                "PowerShellScriptHost." + thisAsm.GetName().Name);
-            var resNames = thisAsm.GetManifestResourceNames();
-            var tempFiles = new string[resNames.Length];
-            for (int index = 0; index < resNames.Length; index++)
-            {
-                tempFiles[index] = Path.Combine(tempDir, resNames[index]);
-            }
-
-            // 将程序启动参数传递到临时脚本文件。
-            var scriptFile = (tempFiles.Length != 0) ?
-                ("\"" + tempFiles[0] + "\"") : "";
-            var exeCmdLine = Environment.CommandLine;
-            var exeFile = Environment.GetCommandLineArgs()[0];
-            var exeLength = exeCmdLine.StartsWith("\"") ?
-                exeFile.Length + 2 : exeFile.Length;
-            var scriptArgs = exeCmdLine.Substring(exeLength);
-            var scriptCmdLine = scriptFile + scriptArgs;
-
-            try
-            {
-                // 将内嵌资源文件输出到临时文件夹。
-                if (!Directory.Exists(tempDir))
-                {
-                    Directory.CreateDirectory(tempDir);
-                }
-                for (int index = 0; index < resNames.Length; index++)
-                {
-                    using (var res = thisAsm.GetManifestResourceStream(resNames[index]))
-                    {
-                        using (var file = File.OpenWrite(tempFiles[index]))
-                        {
-                            res.CopyTo(file);
-                        }
-                    }
-                    File.SetAttributes(tempFiles[index], FileAttributes.Temporary);
-                }
-
-                // 以 PowerShell 执行临时脚本文件。
-                var powershell =
-                    Process.Start(new ProcessStartInfo()
-                    {
-                        FileName = "PowerShell.exe",
-                        Arguments =
-                            "-NoLogo " +
-#if NOPROFILE
-                            "-NoProfile " +
-#endif
-#if NOWINDOW
-                            "-WindowStyle Hidden " +
-#endif
-                            "-ExecutionPolicy RemoteSigned " +
-                            "-File " + scriptCmdLine,
-                        UseShellExecute = false,
-                    });
-                powershell.WaitForExit();
-                Environment.ExitCode = powershell.ExitCode;
-            }
-            catch (Exception ex)
-            {
-                // 输出异常信息并设置错误码。
-                Console.Error.WriteLine(ex);
-                Environment.ExitCode = (ushort)ex.HResult;
-            }
-            finally
-            {
-                try
-                {
-                    // 删除临时文件。
-                    foreach (var tempFile in tempFiles)
-                    {
-                        if (File.Exists(tempFile))
-                        {
-                            File.Delete(tempFile);
-                        }
-                    }
-                    // 删除临时文件所在的文件夹。
-                    if (Directory.Exists(tempDir) &&
-                        Directory.GetFileSystemEntries(tempDir).Length == 0)
-                    {
-                        Directory.Delete(tempDir);
-                    }
-                }
-                catch (Exception ex)
-                {
-                    // 输出异常信息并设置错误码。
-                    Console.Error.WriteLine(ex);
-                    Environment.ExitCode = (ushort)ex.HResult;
-                }
-                finally
-                {
-#if NOEXIT
-                    // 等待用户按键输入。
-                    Console.ReadKey();
-#endif
-                }
-            }
-        }
-    }
-}
-'@<#lang=csharp#>
-
-    # 定义编译器常量。
-    $scriptHostDefines = @('TRACE')
-    if ($NoExit) { $scriptHostDefines += 'NOEXIT' }
-    if ($NoProfile) { $scriptHostDefines += 'NOPROFILE' }
-    if ($NoWindow) { $scriptHostCode += 'NOWINDOW' }
-    $scriptHostDefines = $($scriptHostDefines -join ',')
-
-    # 获取引用文件。
-    if ($Reference)
-    {
-        $referenceFiles = $(Get-Item -LiteralPath $Reference)
-    }
+    $wrapperCodeEncoding = [System.Text.Encoding]::UTF8
+    $wrapperCodePath = Join-Path $PSScriptRoot 'PowerShellScriptWrapper.cs'
+    Get-Item -LiteralPath $wrapperCodePath -Force -ErrorAction Stop > $null
+    $win32IconFile = if ($Win32Icon) { Get-Item -LiteralPath $Win32Icon -Force }
+    $referenceFiles = if ($Reference) { Get-Item -LiteralPath $Reference -Force }
 }
 
 process
 {
     for ($index = 0; $index -lt $Script.Length; $index++)
     {
-        # 根据路径获取脚本文件。
-        $scriptFile = $(Get-Item -LiteralPath $Script[$index])
-        # 设定创建可执行文件的路径。
-        $executablePath =
-            if ($Path -and $Path[$index]) { $Path[$index] }
-            else { "$($scriptFile.BaseName).exe" }
-        $executableFile =
-            if (Test-Path $executablePath)
-            { $(Get-Item -LiteralPath $executablePath) }
-            else
-            { $(New-Item -Path $executablePath -Force) }
+        $scriptFile = Get-Item -LiteralPath $Script[$index] -Force
+        $executablePath = if ($Path -and $Path[$index])
+            { $Path[$index] } else { "$($scriptFile.BaseName).exe" }
+        $executableFile = if (Test-Path -LiteralPath $executablePath)
+            { Get-Item -LiteralPath $executablePath -Force } else
+            { New-Item -Path $executablePath -ItemType File
+              Remove-Item -LiteralPath $executablePath }
 
-        # 设定 C# 编译器的参数。
-        $compilerParam = [System.CodeDom.Compiler.CompilerParameters]::new()
-        $compilerParam.GenerateExecutable = $true
-        $compilerParam.CompilerOptions = "/optimize /define:$scriptHostDefines"
-        # 设定编译器输出可执行文件的路径。
-        $compilerParam.OutputAssembly = $executableFile.FullName
-        Write-Verbose "$($executableFile.FullName)"
-        # 将输入的脚本文件和引用文件嵌入到可执行文件。
-        $compilerParam.EmbeddedResources.Add($scriptFile.FullName) > $null
-        Write-Verbose "    $($scriptFile.Name) *"
+        $compilerArgs = @('/nologo', '/optimize')
+        $compilerArgs += '/target:exe'
+        $compilerArgs += "/out:$($executableFile.FullName)"
+        $compilerArgs += '/reference:System.dll'
+        if ($win32IconFile)
+        {
+            $compilerArgs += "/win32icon:$($win32IconFile.FullName)"
+        }
+        $compilerArgs += "/resource:$($scriptFile.FullName)"
+        Write-Verbose "  * $($scriptFile.Name)"
         foreach ($referenceFile in $referenceFiles)
         {
-            $compilerParam.EmbeddedResources.Add($referenceFile.FullName) > $null
+            $compilerArgs += "/resource:$($referenceFile.FullName)"
             Write-Verbose "    $($referenceFile.Name)"
         }
-        # 添加对 System 程序集的引用。
-        $extraAssembly = [System.Diagnostics.Process].Assembly;
-        $compilerParam.ReferencedAssemblies.Add($extraAssembly.Location) > $null
-
-        # 编译程序集，输出为可执行文件。
-        $codeCompiler = [Microsoft.CSharp.CSharpCodeProvider]::new()
-        $compileResult = $codeCompiler.CompileAssemblyFromSource($compilerParam, $scriptHostCode)
-        if ($compileResult.Errors.HasErrors)
+        $compilerArgs += "/define:$($wrapperDefines -join ',')"
+        $compilerArgs += "/codepage:$($wrapperCodeEncoding.CodePage)"
+        if ([System.Console]::OutputEncoding.WebName -eq 'utf-8')
         {
-            # 输出编译器错误。
-            Write-Warning "$($executableFile.FullName)"
-            $compileResult.Errors | ForEach-Object {
-                Write-Warning "$($_.ErrorNumber), [$($_.Line), $($_.Column)], $($_.ErrorText)" }
+            $compilerArgs += '/utf8output'
+        }
+
+        $compilerArgs += $wrapperCodePath
+        $compileResult = & $compilerPath @compilerArgs 2>&1
+        $compileErrors = $compileResult |
+            Where-Object { $_ -like '*error *: *'}
+        if ($compileErrors)
+        {
+            $compileErrors | Write-Error -Category FromStdErr
         }
         else
         {
-            # 返回创建的可执行文件。
-            $executableFile
+            Get-Item -LiteralPath $executablePath -Force
         }
     }
 }
