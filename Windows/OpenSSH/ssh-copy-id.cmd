@@ -14,11 +14,11 @@
 )
 @ SET OPTIONS=%PORT_OPT% %SSH_OPTS%
 @ SET KEYS_FILE=.ssh/authorized_keys
-@ SET COPYMSG=public key "%ID_FILE%" copy to %DESTINATION%
+@ SET COPYMSG=copy public key %ID_FILE% to %DESTINATION%
 @ FOR /F "delims=" %%K IN ('@ TYPE "%ID_FILE%"') DO @ SET KEY=%%K
 @ ssh %OPTIONS% %DESTINATION% echo^>^>%KEYS_FILE% %KEY%
 @ IF ERRORLEVEL 1 (@ ECHO>&2 error: %COPYMSG% failed) ^
-  ELSE            (@ ECHO>&2 info: %COPYMSG% succeed)
+  ELSE            (@ ECHO>&2 info: %COPYMSG% succeeded)
 @ EXIT /B %ERRORLEVEL%
 
 : PARSE
