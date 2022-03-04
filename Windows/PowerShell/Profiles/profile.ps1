@@ -27,8 +27,8 @@ Set-Alias -Force read Read-Host
 function bell { Write-Host "`a" -NoNewline }
 function mklink { cmd.exe /c mklink @args }
 function string {
-    process { foreach ($_ in $input) { [string]$_ } }
-    end     { foreach ($_ in $args)  { [string]$_ } } }
+    begin   { foreach ($_ in $args)  { [string]$_ } }
+    process { foreach ($_ in $input) { [string]$_ } } }
 function time { $cmd = [scriptblock]::Create($args);
     $time = [datetime]::Now; & $cmd; [datetime]::Now - $time }
 
