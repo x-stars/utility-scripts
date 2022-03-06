@@ -17,9 +17,9 @@ try { [System.Console]::OutputEncoding = $OutputEncoding } catch { }
 # 定义内置命令别名。
 Set-Alias -Force error Write-Error
 Set-Alias -Force eval Invoke-Expression
-Set-Alias -Force guid New-Guid
 Set-Alias -Force hash Get-FileHash
 Set-Alias -Force new New-Object
+Set-Alias -Force nguid New-Guid
 Set-Alias -Force out Out-File
 Set-Alias -Force read Read-Host
 
