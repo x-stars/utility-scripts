@@ -19,7 +19,6 @@ Set-Alias -Force error Write-Error
 Set-Alias -Force eval Invoke-Expression
 Set-Alias -Force hash Get-FileHash
 Set-Alias -Force new New-Object
-Set-Alias -Force nguid New-Guid
 Set-Alias -Force out Out-File
 Set-Alias -Force read Read-Host
 
@@ -29,8 +28,10 @@ function mklink { cmd.exe /c mklink @args }
 function string {
     begin   { foreach ($_ in $args)  { [string]$_ } }
     process { foreach ($_ in $input) { [string]$_ } } }
-function time { $cmd = [scriptblock]::Create($args);
-    $time = [datetime]::Now; & $cmd; [datetime]::Now - $time }
+function time {
+    $cmd = [scriptblock]::Create($args)
+    $timer = [System.Diagnostics.Stopwatch]::StartNew()
+    & $cmd; $timer.Stop(); $timer.Elapsed }
 
 # 定义命令提示配置。
 function prompt
