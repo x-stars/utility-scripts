@@ -21,8 +21,9 @@ Get-ChildItem $PSScriptRoot *.ps1 -File | ForEach-Object `
     $CommandDefine = '    $Command = { & $Script @PSBoundParameters @args }'
     $PipelineDefine = '    $Pipeline = $Command.GetSteppablePipeline()'
     $DefineStatements = @($ScriptDefine, $CommandDefine, $PipelineDefine)
-    $BeginCallStatement = '    $Pipeline.Begin($PSCmdlet)'
-    $BeginStatements = $DefineStatements + $BeginCallStatement
+    $InputDefine = '    $Input = if ($PSCmdlet) { $PSCmdlet } else { $true }'
+    $BeginCallStatement = '    $Pipeline.Begin($Input)'
+    $BeginStatements = $DefineStatements + $InputDefine + $BeginCallStatement
     $BeginBlock = @('begin', '{') + $BeginStatements + @('}')
     $ProcessBlock = @('process', '{', '    $Pipeline.Process($_)', '}')
     $EndBlock = @('end', '{', '    $Pipeline.End()', '}')
