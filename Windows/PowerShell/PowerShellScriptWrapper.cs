@@ -6,7 +6,7 @@ using System.Reflection;
 [assembly: CLSCompliant(true)]
 [assembly: AssemblyCompany("XstarS")]
 [assembly: AssemblyTitle("PowerShell Script Wrapper")]
-[assembly: AssemblyProduct("XstarS.PowerShell.ScriptWrapper")]
+[assembly: AssemblyProduct("PowerShell Script Wrapper")]
 [assembly: AssemblyCopyright("Copyright © XstarS 2020")]
 [assembly: AssemblyVersion("1.0.0.0")]
 [assembly: AssemblyFileVersion("1.0.0.0")]
