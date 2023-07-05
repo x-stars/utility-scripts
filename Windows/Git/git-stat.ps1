@@ -9,7 +9,7 @@ git log --format=%aN | Sort-Object -Unique | ForEach-Object `
         $Tokens = -split $_
         $ThisAdd = 0; $ThisRemove = 0
         [int]::TryParse($Tokens[0], [ref]$ThisAdd) > $null
-        [int]::TryParse($Tokens[1], [ref]$ThisAdd) > $null
+        [int]::TryParse($Tokens[1], [ref]$ThisRemove) > $null
         $Add += $ThisAdd; $Remove += $ThisRemove
     }
     $Total = $Add - $Remove
