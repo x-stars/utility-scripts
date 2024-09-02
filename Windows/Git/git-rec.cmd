@@ -10,7 +10,7 @@
 @ SET TOTALERROR=0
 @ SET PT=SET /P ^<NUL:
 @ FOR /R %%P IN (.) DO @ (
-    @ IF EXIST "%%~fP\.git" @ (
+    @ IF EXIST "%%~fP\.git\" @ (
         @ PUSHD %%~fP
         @ CALL:HEADER
         @ CALL git %*
