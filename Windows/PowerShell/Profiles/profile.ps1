@@ -36,6 +36,9 @@ function time {
 # 定义命令提示配置。
 function prompt
 {
+    #.Link
+    # https://go.microsoft.com/fwlink/?LinkID=225750
+    #.ExternalHelp System.Management.Automation.dll-help.xml
     $Status = $?                 #0x25CB          #0x00D7
     $StatusText = if ($Status) { '(○PS)' } else { '(×PS)' }
     $StatusColor = if ($Status) { 'Green' } else { 'Red' }
